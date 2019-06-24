@@ -14,14 +14,16 @@ import {
 import DeleteIcon from "@material-ui/icons/Delete";
 import ACTIONS from "../modules/actions";
 import { connect } from "react-redux";
-
+// what from store does component need
 const mapStateToProps = state => ({
     items: state.items
 });
 
+
 const mapDispatchToProps = dispatch => ({
     createItem: item => dispatch(ACTIONS.createItem(item)),
-    deleteItem: id => dispatch(ACTIONS.deleteItem(id))
+    deleteItem: id => dispatch(ACTIONS.deleteItem(id)),
+    
 });
 
 class ToDO extends Component {
