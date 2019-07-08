@@ -15,9 +15,11 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 //Initiate our app
 const app = express();
+const router = require('express').Router();
 
 //Configure our app
 app.use(cors());
+app.use(router);
 app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
