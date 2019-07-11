@@ -2,9 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const passport = require('passport');
+// const passport = require('passport');
 const cors = require('cors');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const errorHandler = require('errorhandler');
 
 //Configure mongoose's promise to global promise
@@ -20,23 +20,21 @@ const router = require('express').Router();
 //Configure our app
 app.use(cors());
 app.use(router);
-app.use(require('morgan')('dev'));
+// app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'gsw4-32019', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session())
+// app.use(passport.initialize());
+// app.use(passport.session())
 if(!isProduction) {
   app.use(errorHandler());
 }
 
 //Configure Mongoose
-mongoose.connect('mongodb://localhost/choreheaven');
-mongoose.set('debug', true);
+// mongoose.connect('mongodb://localhost/');
+// mongoose.set('debug', true);
 
-require('./models/Users');
-require('./config/passport');
 app.use(require('./routes'));
 
 //Error handlers & middlewares
