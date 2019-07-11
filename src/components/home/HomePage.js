@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 
+
+
 export default withAuth(class HomePage extends Component {
   constructor(props) {
     super(props);
@@ -40,15 +42,15 @@ export default withAuth(class HomePage extends Component {
     if (this.state.authenticated === null) return null;
 
     const button = this.state.authenticated ?
-      <button onClick={this.logout}>Logout</button> :
-      <button onClick={this.login}>Login</button>;
+      <button onClick={this.logout}><Link to='/'>Logout</Link><br /></button> :
+      <button onClick={this.login}><Link to='/login'>Login</Link><br /></button>;
 
     return (
       <div>
-        <Link to='/'>Home</Link><br/>
-        <Link to='/protected'>Protected</Link><br/>
+        <Link to='/'>Home</Link><br />
+        <Link to='/protected'>Protected</Link><br />
         {button}
-      </div>
+      </div>      
     );
   }
 });

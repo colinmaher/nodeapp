@@ -2,9 +2,33 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import config from './app.config';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Security } from '@okta/okta-react';
 import * as serviceWorker from './serviceWorker';
+import configureStore from "./modules/store";
+import { Provider as ReduxProvider } from "react-redux";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+function onAuthRequired({ history }) {
+    history.push('/login');
+}
+
+const reduxStore = configureStore(window.REDUX_INITIAL_DATA);
+
+ReactDOM.render((
+    <ReduxProvider store={reduxStore}>
+        <Router>
+            <Security
+                issuer={config.issuer}
+                client_id={config.client_id}
+                redirect_uri={config.redirect_uri}
+                onAuthRequired={onAuthRequired}
+            >
+                <App />
+            </Security>
+        </Router>;
+    </ReduxProvider>), document.getElementById('root'));
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

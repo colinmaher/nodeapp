@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 
+
 export default withAuth(
   class Navigation extends React.Component {
     constructor(props) {
@@ -27,12 +28,7 @@ export default withAuth(
       const authNav = this.state.authenticated ? (
         <ul className="auth-nav">
           <li>
-            <a
-              href="javascript:void(0)"
-              onClick={() => this.props.auth.logout()}
-            >
-              Logout
-            </a>
+            <Link to="/" onClick={() => this.props.auth.logout()} >Logout</Link>
           </li>
           <li>
             <Link to="/profile">Profile</Link>
@@ -41,12 +37,8 @@ export default withAuth(
       ) : (
           <ul className="auth-nav">
             <li>
-              <a
-                href="javascript:void(0)"
-                onClick={() => this.props.auth.login()}
-              >
-                Login
-            </a>
+
+              <Link to="/login" onClick={() => this.props.auth.login()}>Login</Link>
             </li>
             <li>
               <Link to="/register">Register</Link>
@@ -54,6 +46,7 @@ export default withAuth(
           </ul>
         );
       return (
+
         <nav>
           <ul>
             <li>
@@ -62,6 +55,7 @@ export default withAuth(
             {authNav}
           </ul>
         </nav>
+
       );
     }
   }

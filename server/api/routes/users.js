@@ -17,6 +17,7 @@ router.post('/', (req, res, next) => {
       }
     }
   };
+  // validate input for duplicate/email/name/password
   oktaClient
     .createUser(newUser)
     .then(user => {
