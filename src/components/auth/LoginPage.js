@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import OktaSignInWidget from './OktaSignInWidget';
 import { withAuth } from '@okta/okta-react';
 import ProfilePage from './ProfilePage';
+import Navigation from '../shared/Navigation'
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 export default withAuth(class LoginPage extends Component {
@@ -18,6 +19,7 @@ export default withAuth(class LoginPage extends Component {
     }
 
     async checkAuthentication() {
+        console.log(this.props.auth.isAuthenticated())
         const authenticated = await this.props.auth.isAuthenticated();
         if (authenticated !== this.state.authenticated) {
             this.setState({ authenticated });
@@ -45,16 +47,20 @@ export default withAuth(class LoginPage extends Component {
     }
 
     render() {
+        
         if (this.state.authenticated === null) return null;
-        console.log(this.props.baseUrl)
         return this.state.authenticated ?
             <Router>
                 <Redirect to={{ pathname: '/profile' }} />
                 <Route path='/profile' component={ProfilePage} />
             </Router> :
-            <OktaSignInWidget
-                baseUrl={this.props.baseUrl}
-                onSuccess={this.onSuccess}
-                onError={this.onError} />;
+            <div>
+                <Navigation />
+                <OktaSignInWidget
+                    baseUrl={this.props.baseUrl}
+                    onSuccess={this.onSuccess}
+                    onError={this.onError} />;
+            </div>
+
     }
 });

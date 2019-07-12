@@ -19,7 +19,6 @@ export default class App extends Component {
     return (
       <div className="App">
         <Router>
-          <Navigation />
           <Route path="/" exact component={HomePage} />
           <Route
             path="/login"
