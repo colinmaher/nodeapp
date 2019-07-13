@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 
-import Navigation from './components/shared/Navigation';
 import HomePage from './components/home/HomePage';
 import RegistrationForm from './components/auth/RegistrationForm';
 import config from './app.config';
