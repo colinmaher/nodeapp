@@ -21,7 +21,7 @@ const router = require('express').Router();
 //Configure our app
 app.use(cors());
 app.use(router);
-// app.use(require('morgan')('dev'));
+app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,7 +36,12 @@ if(!isProduction) {
 // mongoose.connect('mongodb://localhost/');
 // mongoose.set('debug', true);
 
+app.use(function (req, res, next) {
+  console.log(req.body);
+  next()
+});
 app.use(require('./api/routes'));
+
 
 //Error handlers & middlewares
 if(!isProduction) {
