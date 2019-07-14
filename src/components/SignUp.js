@@ -60,24 +60,25 @@ export default function SignUp() {
     const classes = useStyles();
     console.log(classes)
     return (
-        <Router>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign up
+
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <div className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Sign up
                     </Typography>
-                    <RegistrationForm classes={classes}/>
-                </div>
-                <Box mt={5}>
-                    <MadeWithLove />
-                </Box>
-            </Container>
+                <RegistrationForm classes={classes} />
+            </div>
+            <Box mt={5}>
+                <MadeWithLove />
+            </Box>
             <Route path="/signin" component={SignInSide}></Route>
-        </Router>
+        </Container>
+        
+        
 
     );
 }

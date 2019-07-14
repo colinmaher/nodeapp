@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
-import Navigation from '../shared/Navigation'
+
 
 export default withAuth(class HomePage extends Component {
   constructor(props) {
@@ -46,7 +46,6 @@ export default withAuth(class HomePage extends Component {
 
     return (
       <div>
-        <Navigation />
         <Link to='/'>Home</Link><br />
         <Link to='/protected'>Protected</Link><br />
         {button}

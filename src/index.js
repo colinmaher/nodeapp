@@ -26,7 +26,7 @@ ReactDOM.render((
             >
                 <App />
             </Security>
-        </Router>;
+        </Router>
     </ReduxProvider>), document.getElementById('root'));
 
 
