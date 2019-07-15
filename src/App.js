@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 
 import HomePage from './components/home/HomePage';
@@ -8,8 +8,9 @@ import SignUp from './components/SignUp';
 import config from './app.config';
 import LoginPage from './components/auth/LoginPage';
 import ProfilePage from './components/auth/ProfilePage';
-import Navigation from './components/shared/Navigation'
+// import Navigation from './components/shared/Navigation'
 import './App.css';
+import PrimarySearchAppBar from './components/home/PrimarySearchAppBar';
 
 
 export default class App extends Component {
@@ -19,7 +20,8 @@ export default class App extends Component {
     return (
 
       <div className="App">
-        <Navigation />
+        {/* <Navigation /> */}
+        <PrimarySearchAppBar />
         <Route path="/" exact component={HomePage} />
         <Route
           path="/login"
