@@ -108,6 +108,10 @@ export default withAuth(
         }
 
         const menuId = 'primary-search-account-menu';
+        const menuOption = this.state.authenticated ? (
+            <MenuItem onClick={handleMenuClose}><Link to="/profile">Profile</Link></MenuItem>
+        ) : (<MenuItem onClick={handleMenuClose}><Link to="/login">Login</Link></MenuItem>);
+        
         const renderMenu = (
             <Menu
                 anchorEl={anchorEl}
@@ -118,8 +122,7 @@ export default withAuth(
                 open={isMenuOpen}
                 onClose={handleMenuClose}
             >
-            
-                <MenuItem onClick={handleMenuClose}><Link to="/profile">Profile</Link></MenuItem>
+                {menuOption}
                 <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             </Menu>
         );
