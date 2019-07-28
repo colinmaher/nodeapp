@@ -15,9 +15,9 @@ import Container from '@material-ui/core/Container';
 // import { Theme as DefaultTheme } from './createMuiTheme';
 // import { useTheme } from '@material-ui/styles';
 
-import SignInSide from "./SignInSide";
+import SignInSide from "../SignInSide";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
-import RegistrationForm from './auth/RegistrationForm';
+import RegistrationForm from './RegistrationForm';
 
 function MadeWithLove() {
     return (
