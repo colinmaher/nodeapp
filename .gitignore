@@ -17,7 +17,6 @@
 .env.development.local
 .env.test.local
 .env.production.local
-.vscode
 /server/secrets.js
 
 npm-debug.log*
