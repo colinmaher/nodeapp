@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 
 import HomePage from './components/home/HomePage';
-import SignUp from './components/SignUp';
+import SignUp from './components/auth/SignUp';
 import config from './app.config';
 import LoginPage from './components/auth/LoginPage';
 import ProfilePage from './components/auth/ProfilePage';
@@ -16,11 +16,9 @@ import PrimarySearchAppBar from './components/home/PrimarySearchAppBar';
 export default class App extends Component {
 
   render() {
-    // console.log(config.url)
     return (
 
       <div className="App">
-        {/* <Navigation /> */}
         <PrimarySearchAppBar />
         <Route path="/" exact component={HomePage} />
         <Route
@@ -28,7 +26,7 @@ export default class App extends Component {
           render={() => <LoginPage baseUrl={config.url} />}
         />
         <Route path="/implicit/callback" component={ImplicitCallback} />
-        <Route path="/register" component={SignUp} />
+        <Route path="/signup" component={SignUp} />
         <SecureRoute path="/profile" component={ProfilePage} />
       </div>
 

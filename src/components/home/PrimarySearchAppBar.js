@@ -17,6 +17,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
+import MenuOptions from './MenuOptions'
 
 const useStyles = makeStyles(theme => ({
     grow: {
@@ -108,10 +109,6 @@ export default withAuth(
         }
 
         const menuId = 'primary-search-account-menu';
-        const menuOption = this.state.authenticated ? (
-            <MenuItem onClick={handleMenuClose}><Link to="/profile">Profile</Link></MenuItem>
-        ) : (<MenuItem onClick={handleMenuClose}><Link to="/login">Login</Link></MenuItem>);
-        
         const renderMenu = (
             <Menu
                 anchorEl={anchorEl}
@@ -122,8 +119,7 @@ export default withAuth(
                 open={isMenuOpen}
                 onClose={handleMenuClose}
             >
-                {menuOption}
-                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                <MenuOptions />
             </Menu>
         );
 
@@ -181,7 +177,7 @@ export default withAuth(
                             <MenuIcon />
                         </IconButton>
                         <Typography className={classes.title} variant="h6" noWrap>
-                            Material-UI
+                        <Link to='/'>Twtr</Link>
           </Typography>
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>

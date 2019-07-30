@@ -22,14 +22,14 @@ const secret = require('./secrets').secret;
 //Configure our app
 app.use(cors());
 app.use(router);
-app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('morgan')('dev'));
 // app.use(passport.initialize());
 // app.use(passport.session())
-if(!isProduction) {
+if (!isProduction) {
   app.use(errorHandler());
 }
 
@@ -39,13 +39,14 @@ if(!isProduction) {
 
 app.use(function (req, res, next) {
   console.log(req.body);
+  console.log(req.session);
   next()
 });
 app.use(require('./api/routes'));
 
 
 //Error handlers & middlewares
-if(!isProduction) {
+if (!isProduction) {
   app.use((req, res, err) => {
     res.status(err.status || 500);
 
