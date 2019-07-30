@@ -36,6 +36,7 @@ class RegistrationForm extends React.Component {
 
   async checkAuthentication() {
     const sessionToken = await this.props.auth.getIdToken();
+    console.log(sessionToken)
     if (sessionToken) {
       this.setState({ sessionToken });
     }
@@ -60,7 +61,6 @@ class RegistrationForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(JSON.stringify(this.state))
     fetch(config.serverUrl +'/users', {
       method: 'POST',
       headers: {
@@ -91,7 +91,6 @@ class RegistrationForm extends React.Component {
     }
   
     const classes = this.props.classes;
-    console.log(classes)
     
     return (
       <form className={classes.form} noValidate onSubmit={this.handleSubmit}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { MenuItem } from '@material-ui/core'
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 
@@ -33,16 +34,32 @@ export default withAuth(class MenuOptions extends React.Component {
     async logout() {
         this.props.auth.logout('/');
     }
+
+    
+    handleMenuClose() {
+        this.setState({ anchorEl: null })
+        this.handleMobileMenuClose();
+    }
+
+    handleMobileMenuClose() {
+        this.setState({ mobileMoreAnchorEl: null })
+    }
+
     render() {
         const menuOptions = this.state.authenticated ? (
-            <div>
-                <MenuItem onClick={handleMenuClose}><Link to="/profile">Profile</Link></MenuItem>
-                <MenuItem onClick={handleMenuClose}><Link to="/logout">Logout</Link></MenuItem>
-            </div>
+            <>
+                <MenuItem onClick={this.handleMenuClose.bind(this)}><Link to="/profile">Profile</Link></MenuItem>
+                <MenuItem onClick={() => {this.props.auth.logout(); this.handleMenuClose.bind(this)} }><Link to="/">Logout</Link></MenuItem>
+            </>
 
-        ) : (<MenuItem onClick={handleMenuClose}><Link to="/login">Login</Link></MenuItem>);
+        ) : (
+            <>
+                <MenuItem onClick={this.handleMenuClose.bind(this)}><Link to="/login">Login</Link></MenuItem>
+                <MenuItem onClick={this.handleMenuClose.bind(this)}><Link to="/signup">Create Account</Link></MenuItem>
+            </>
+        );
         return (
-              {menuOptions}
+              menuOptions
           )
     }
 });
