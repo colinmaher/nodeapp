@@ -36,7 +36,6 @@ class RegistrationForm extends React.Component {
 
   async checkAuthentication() {
     const sessionToken = await this.props.auth.getIdToken();
-    console.log(sessionToken)
     if (sessionToken) {
       this.setState({ sessionToken });
     }

@@ -3,6 +3,7 @@ const oktaClient = require('../lib/oktaClient');
 
 /* Create a new User (register). */
 router.post('/', (req, res, next) => {
+  console.log(req.body)
   if (!req.body) return res.sendStatus(400);
   const newUser = {
     profile: {

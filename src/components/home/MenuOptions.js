@@ -6,7 +6,9 @@ import { withAuth } from '@okta/okta-react';
 export default withAuth(class MenuOptions extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { authenticated: null };
+        this.state = {
+            authenticated: null,
+        };
         this.checkAuthentication = this.checkAuthentication.bind(this);
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
@@ -35,31 +37,22 @@ export default withAuth(class MenuOptions extends React.Component {
         this.props.auth.logout('/');
     }
 
-    
-    handleMenuClose() {
-        this.setState({ anchorEl: null })
-        this.handleMobileMenuClose();
-    }
-
-    handleMobileMenuClose() {
-        this.setState({ mobileMoreAnchorEl: null })
-    }
-
     render() {
         const menuOptions = this.state.authenticated ? (
             <>
-                <MenuItem onClick={this.handleMenuClose.bind(this)}><Link to="/profile">Profile</Link></MenuItem>
-                <MenuItem onClick={() => {this.props.auth.logout(); this.handleMenuClose.bind(this)} }><Link to="/">Logout</Link></MenuItem>
+                <Link to="/profile"><MenuItem >Profile</MenuItem></Link>
+                <Link to="/"><MenuItem onClick={() => {
+                    this.props.auth.logout();
+                }}>Logout</MenuItem></Link>
             </>
-
         ) : (
-            <>
-                <MenuItem onClick={this.handleMenuClose.bind(this)}><Link to="/login">Login</Link></MenuItem>
-                <MenuItem onClick={this.handleMenuClose.bind(this)}><Link to="/signup">Create Account</Link></MenuItem>
-            </>
-        );
+                <>
+                    <Link to="/login"><MenuItem>Login</MenuItem></Link>
+                    <Link to="/signup"><MenuItem>Create Account</MenuItem></Link>
+                </>
+            );
         return (
-              menuOptions
-          )
+            menuOptions
+        )
     }
 });

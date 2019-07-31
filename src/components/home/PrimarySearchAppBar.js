@@ -22,6 +22,7 @@ import MenuOptions from './MenuOptions'
 const useStyles = makeStyles(theme => ({
     grow: {
         flexGrow: 1,
+        height: '5rem',
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -81,155 +82,157 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default withAuth(
-    function PrimarySearchAppBar() {
 
-        const classes = useStyles();
-        const [anchorEl, setAnchorEl] = React.useState(null);
-        const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+export default function PrimarySearchAppBar() {
 
-        const isMenuOpen = Boolean(anchorEl);
-        const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const classes = useStyles();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-        function handleProfileMenuOpen(event) {
-            setAnchorEl(event.currentTarget);
-        }
+    const isMenuOpen = Boolean(anchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-        function handleMobileMenuClose() {
-            setMobileMoreAnchorEl(null);
-        }
+    function handleProfileMenuOpen(event) {
+        setAnchorEl(event.currentTarget);
+    }
 
-        function handleMenuClose() {
-            setAnchorEl(null);
-            handleMobileMenuClose();
-        }
+    function handleMobileMenuClose() {
+        setMobileMoreAnchorEl(null);
+    }
 
-        function handleMobileMenuOpen(event) {
-            setMobileMoreAnchorEl(event.currentTarget);
-        }
+    function handleMenuClose() {
+        console.log("handlemenuclose")
+        setAnchorEl(null);
+        handleMobileMenuClose();
+    }
 
-        const menuId = 'primary-search-account-menu';
-        const renderMenu = (
-            <Menu
-                anchorEl={anchorEl}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                id={menuId}
-                keepMounted
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={isMenuOpen}
-                onClose={handleMenuClose}
-            >
-                <MenuOptions />
-            </Menu>
-        );
+    function handleMobileMenuOpen(event) {
+        setMobileMoreAnchorEl(event.currentTarget);
+    }
 
-        const mobileMenuId = 'primary-search-account-menu-mobile';
-        const renderMobileMenu = (
-            <Menu
-                anchorEl={mobileMoreAnchorEl}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                id={mobileMenuId}
-                keepMounted
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={isMobileMenuOpen}
-                onClose={handleMobileMenuClose}
-            >
-                <MenuItem>
-                    <IconButton aria-label="Show 4 new mails" color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <MailIcon />
-                        </Badge>
-                    </IconButton>
-                    <p>Messages</p>
-                </MenuItem>
-                <MenuItem>
-                    <IconButton aria-label="Show 11 new notifications" color="inherit">
-                        <Badge badgeContent={11} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
-                    <p>Notifications</p>
-                </MenuItem>
-                <MenuItem onClick={handleProfileMenuOpen}>
+    const menuId = 'primary-search-account-menu';
+    const renderMenu = (
+        <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+        >
+            
+            <MenuOptions onClick={handleMenuClose} />
+        </Menu>
+    );
+
+    const mobileMenuId = 'primary-search-account-menu-mobile';
+    const renderMobileMenu = (
+        <Menu
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            id={mobileMenuId}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={isMobileMenuOpen}
+            onClose={handleMobileMenuClose}
+        >
+            <MenuItem>
+                <IconButton aria-label="Show 4 new mails" color="inherit">
+                    <Badge badgeContent={4} color="secondary">
+                        <MailIcon />
+                    </Badge>
+                </IconButton>
+                <p>Messages</p>
+            </MenuItem>
+            <MenuItem>
+                <IconButton aria-label="Show 11 new notifications" color="inherit">
+                    <Badge badgeContent={11} color="secondary">
+                        <NotificationsIcon />
+                    </Badge>
+                </IconButton>
+                <p>Notifications</p>
+            </MenuItem>
+            <MenuItem onClick={handleProfileMenuOpen}>
+                <IconButton
+                    aria-label="Account of current user"
+                    aria-controls="primary-search-account-menu"
+                    aria-haspopup="true"
+                    color="inherit"
+                >
+                    <AccountCircle />
+                </IconButton>
+                <p>Profile</p>
+            </MenuItem>
+        </Menu>
+    );
+
+    return (
+        <div className={classes.grow}>
+            <AppBar position="static">
+                <Toolbar>
                     <IconButton
-                        aria-label="Account of current user"
-                        aria-controls="primary-search-account-menu"
-                        aria-haspopup="true"
+                        edge="start"
+                        className={classes.menuButton}
                         color="inherit"
+                        aria-label="Open drawer"
                     >
-                        <AccountCircle />
+                        <MenuIcon />
                     </IconButton>
-                    <p>Profile</p>
-                </MenuItem>
-            </Menu>
-        );
-
-        return (
-            <div className={classes.grow}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="Open drawer"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography className={classes.title} variant="h6" noWrap>
+                    <Typography className={classes.title} variant="h6" noWrap>
                         <Link to='/'>Twtr</Link>
-          </Typography>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
-                            <InputBase
-                                placeholder="Search…"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'Search' }}
-                            />
+                    </Typography>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
                         </div>
-                        <div className={classes.grow} />
-                        <div className={classes.sectionDesktop}>
-                            <IconButton aria-label="Show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="secondary">
-                                    <MailIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton aria-label="Show 17 new notifications" color="inherit">
-                                <Badge badgeContent={17} color="secondary">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton
-                                edge="end"
-                                aria-label="Account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
-                        </div>
-                        <div className={classes.sectionMobile}>
-                            <IconButton
-                                aria-label="Show more"
-                                aria-controls={mobileMenuId}
-                                aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
-                                color="inherit"
-                            >
-                                <MoreIcon />
-                            </IconButton>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-                {renderMobileMenu}
-                {renderMenu}
-            </div>
-        );
-    });
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'Search' }}
+                        />
+                    </div>
+                    <div className={classes.grow} />
+                    <div className={classes.sectionDesktop}>
+                        <IconButton aria-label="Show 4 new mails" color="inherit">
+                            <Badge badgeContent={4} color="secondary">
+                                <MailIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton aria-label="Show 17 new notifications" color="inherit">
+                            <Badge badgeContent={17} color="secondary">
+                                <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            edge="end"
+                            aria-label="Account of current user"
+                            aria-controls={menuId}
+                            aria-haspopup="true"
+                            onClick={handleProfileMenuOpen}
+                            color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                    </div>
+                    <div className={classes.sectionMobile}>
+                        <IconButton
+                            aria-label="Show more"
+                            aria-controls={mobileMenuId}
+                            aria-haspopup="true"
+                            onClick={handleMobileMenuOpen}
+                            color="inherit"
+                        >
+                            <MoreIcon />
+                        </IconButton>
+                    </div>
+                </Toolbar>
+            </AppBar>
+            {renderMobileMenu}
+            {renderMenu}
+        </div>
+    );
+};

@@ -19,6 +19,7 @@ export default class App extends Component {
     return (
 
       <div className="App">
+
         <PrimarySearchAppBar />
         <Route path="/" exact component={HomePage} />
         <Route
@@ -28,6 +29,7 @@ export default class App extends Component {
         <Route path="/implicit/callback" component={ImplicitCallback} />
         <Route path="/signup" component={SignUp} />
         <SecureRoute path="/profile" component={ProfilePage} />
+
       </div>
 
 
