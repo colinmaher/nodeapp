@@ -19,7 +19,6 @@ export default withAuth(
 
     render() {
       if (!this.state.user) return null;
-      console.log(this.state.user);
       return (
         <section className="user-profile">
           <h1>User Profile</h1>
