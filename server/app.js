@@ -17,29 +17,36 @@ const isProduction = process.env.NODE_ENV === 'production';
 //Initiate our app
 const app = express();
 const router = require('express').Router();
+const secret = require('./secrets').secret;
 
 //Configure our app
 app.use(cors());
 app.use(router);
-// app.use(require('morgan')('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'gsw4-32019', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+app.use(require('morgan')('dev'));
 // app.use(passport.initialize());
 // app.use(passport.session())
-if(!isProduction) {
+if (!isProduction) {
   app.use(errorHandler());
 }
 
 //Configure Mongoose
-// mongoose.connect('mongodb://localhost/');
+// mongoose.connect('mongodb://localhost/twtr');
 // mongoose.set('debug', true);
 
+app.use(function (req, res, next) {
+  // console.log(req.body);
+  // console.log(req.session);
+  next()
+});
 app.use(require('./api/routes'));
 
+
 //Error handlers & middlewares
-if(!isProduction) {
+if (!isProduction) {
   app.use((req, res, err) => {
     res.status(err.status || 500);
 

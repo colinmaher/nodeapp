@@ -19,7 +19,8 @@ export default class OktaSignInWidget extends Component {
     this.widget.remove();
   }
 
+
   render() {
-    return <div />;
+    return <div />
   }
 };
