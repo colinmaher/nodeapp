@@ -34,12 +34,12 @@ if (!isProduction) {
 }
 
 //Configure Mongoose
-// mongoose.connect('mongodb://localhost/');
+// mongoose.connect('mongodb://localhost/twtr');
 // mongoose.set('debug', true);
 
 app.use(function (req, res, next) {
-  console.log(req.body);
-  console.log(req.session);
+  // console.log(req.body);
+  // console.log(req.session);
   next()
 });
 app.use(require('./api/routes'));

@@ -1,7 +1,7 @@
 // src/Home.js
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 
 
@@ -43,13 +43,13 @@ export default withAuth(class HomePage extends Component {
     const button = this.state.authenticated ?
       <button onClick={this.logout}><Link to='/'>Logout</Link><br /></button> :
       <button onClick={this.login}><Link to='/login'>Login</Link><br /></button>;
-
-    return (
+    return this.state.authenticated ? 
+     (
       <div>
         <Link to='/'>Home</Link><br />
         <Link to='/protected'>Protected</Link><br />
         {button}
       </div>      
-    );
+    ) : ( <Redirect to={{ pathname: '/login' }}/> );
   }
 });

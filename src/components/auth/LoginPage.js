@@ -1,9 +1,7 @@
 
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import OktaSignInWidget from './OktaSignInWidget';
 import { withAuth } from '@okta/okta-react';
-import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import SignInSide from './SignInSide';
 
 export default withAuth(class LoginPage extends Component {
@@ -50,7 +48,5 @@ export default withAuth(class LoginPage extends Component {
         return this.state.authenticated ?
             <Redirect to={{ pathname: '/profile' }} /> :
             <SignInSide baseUrl={this.props.baseUrl}/>
-
-
     }
 });

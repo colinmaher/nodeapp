@@ -16,7 +16,7 @@ import Container from '@material-ui/core/Container';
 // import { useTheme } from '@material-ui/styles';
 
 import SignInSide from "./SignInSide";
-import { BrowserRouter as Router, Link, Route } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import RegistrationForm from './RegistrationForm';
 
 function MadeWithLove() {

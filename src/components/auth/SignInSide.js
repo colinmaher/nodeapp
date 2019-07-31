@@ -6,14 +6,14 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import SignUp from "./SignUp";
+import { Link } from "react-router-dom";
 import OktaSignInWidget from "./OktaSignInWidget";
 import withAuth from '@okta/okta-react/dist/withAuth';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: '100vh',
+    height: 'calc(100% - 5rem)',
+    overflowY: 'hidden',
   },
   image: {
     backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -45,45 +45,46 @@ const SignInSide = withAuth((props) => {
 
   function onSuccess(res) {
     if (res.status === 'SUCCESS') {
-        return props.auth.redirect({
-            sessionToken: res.session.token
-        });
+      return props.auth.redirect({
+        sessionToken: res.session.token
+      });
     } else {
-        // The user can be in another authentication state that requires further action.
-        // For more information about these states, see:
-        //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
+      // The user can be in another authentication state that requires further action.
+      // For more information about these states, see:
+      //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
     }
-}
+  }
 
-// set error message
-function onError(err) {
+  // set error message
+  function onError(err) {
     console.log('error logging in', err);
-}
+  }
 
   return (
-    <Router>
-        <Grid container component="main" className={classes.root}>
+    < >
+      <Grid container component="main" className={classes.root} >
         <CssBaseline />
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-            <div className={classes.paper}>
+          <div className={classes.paper}>
             <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
+              <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-                Sign in
+              Sign in
             </Typography>
             <OktaSignInWidget className={classes.form}
-                    baseUrl={props.baseUrl}
-                    onSuccess={onSuccess}
-                    onError={onError} />
-            </div>
+              baseUrl={props.baseUrl}
+              onSuccess={onSuccess}
+              onError={onError} />
+            <Link to="/signup" >Don't have an account?</Link>
+          </div>
         </Grid>
-        </Grid>
-        <Route path="/signup" component={SignUp}></Route>
-    </Router>
+      </Grid>
 
-    
+    </>
+
+
   )
 });
 export default SignInSide;
