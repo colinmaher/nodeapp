@@ -38,3 +38,7 @@ html, body
     transform: rotate(360deg);
   }
 }
+
+#okta-sign-in {
+  margin-top: 2rem;
+}
