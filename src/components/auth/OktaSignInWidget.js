@@ -10,7 +10,15 @@ export default class OktaSignInWidget extends Component {
   componentDidMount() {
     const el = ReactDOM.findDOMNode(this);
     this.widget = new OktaSignIn({
-      baseUrl: this.props.baseUrl
+      baseUrl: this.props.baseUrl,
+      customButtons: [
+        {
+          title: 'Sign Up',
+          className: 'btn-customAuth',
+          click: () => {this.props.history.push('/signup')},
+
+        }
+      ],
     });
     this.widget.renderEl({el}, this.props.onSuccess, this.props.onError);
   }
@@ -21,6 +29,6 @@ export default class OktaSignInWidget extends Component {
 
 
   render() {
-    return <div />
+    return <div  style={{ position: 'fixed' ,}}/>
   }
 };

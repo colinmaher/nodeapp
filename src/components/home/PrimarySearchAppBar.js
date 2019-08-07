@@ -16,7 +16,6 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 import { Link } from 'react-router-dom';
-import { withAuth } from '@okta/okta-react';
 import MenuOptions from './MenuOptions'
 
 const useStyles = makeStyles(theme => ({
@@ -120,9 +119,11 @@ export default function PrimarySearchAppBar() {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}
+            onClick={handleMenuClose}
+            style={{ padding: 'none'}}
         >
-            
-            <MenuOptions onClick={handleMenuClose} />
+
+            <MenuOptions />
         </Menu>
     );
 

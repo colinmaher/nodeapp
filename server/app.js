@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const fs = require('fs');
+// const fs = require('fs');
 // const passport = require('passport');
 const cors = require('cors');
 // const mongoose = require('mongoose');
@@ -26,20 +26,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('morgan')('dev'));
+
+const morgan = require('morgan');
+app.use(morgan('dev'));
 // app.use(passport.initialize());
 // app.use(passport.session())
 if (!isProduction) {
   app.use(errorHandler());
 }
 
+app.get("/health", function (req, res) {
+  res.status(200).send();
+});
+
 //Configure Mongoose
 // mongoose.connect('mongodb://localhost/twtr');
 // mongoose.set('debug', true);
 
 app.use(function (req, res, next) {
-  // console.log(req.body);
-  // console.log(req.session);
+  console.log(req.body);
+  console.log(req.session);
   next()
 });
 app.use(require('./api/routes'));

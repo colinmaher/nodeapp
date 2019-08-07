@@ -12,8 +12,7 @@ import withAuth from '@okta/okta-react/dist/withAuth';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: 'calc(100% - 5rem)',
-    overflowY: 'hidden',
+    height: 'calc(100% - 5rem)',   
   },
   image: {
     backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -23,6 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     margin: theme.spacing(8, 4),
+    marginTop: 0,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
+    
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -62,22 +63,16 @@ const SignInSide = withAuth((props) => {
 
   return (
     < >
-      <Grid container component="main" className={classes.root} >
+      <Grid container component="main" className={classes.root}>
         <CssBaseline />
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
             <OktaSignInWidget className={classes.form}
               baseUrl={props.baseUrl}
               onSuccess={onSuccess}
-              onError={onError} />
-            <Link to="/signup" >Don't have an account?</Link>
+              onError={onError}/>
+            
           </div>
         </Grid>
       </Grid>
