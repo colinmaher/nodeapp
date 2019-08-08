@@ -16,16 +16,38 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 //Initiate our app
 const app = express();
+require('dotenv').config()
+const helmet = require('helmet');
 const router = require('express').Router();
-const secret = require('./secrets').secret;
+const redis = require("redis");
+console.log(process.env.REDISCACHEHOSTNAME);
+const client = redis.createClient(6380, process.env.REDISCACHEHOSTNAME,
+    {auth_pass: process.env.REDISCACHEKEY, tls: {servername: process.env.REDISCACHEHOSTNAME}});
+// const secret = require('./secrets').secret;
+
+
+// Add your cache name and access key.
 
 //Configure our app
+app.use(helmet());
 app.use(cors());
 app.use(router);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+const options = {
+  client: client
+}
+
+const RedisStore = require('connect-redis')(session);
+app.use(session({
+  store: new RedisStore(options),
+  secret: process.env.SESSIONSECRET,
+  cookie: { maxAge: 60000 },
+  resave: false,
+  saveUninitialized: false
+}));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 const morgan = require('morgan');
 app.use(morgan('dev'));

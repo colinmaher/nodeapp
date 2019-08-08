@@ -63,7 +63,7 @@ class RegistrationForm extends React.Component {
     fetch(config.serverUrl +'/users', {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(this.state)
