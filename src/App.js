@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 
 import HomePage from './components/home/HomePage';
@@ -21,14 +21,17 @@ export default class App extends Component {
       <div className="App">
 
         <PrimarySearchAppBar />
-        <Route path="/" exact component={HomePage} />
-        <Route
-          path="/login"
-          render={() => <LoginPage baseUrl={config.url} />}
-        />
-        <Route path="/implicit/callback" component={ImplicitCallback} />
-        <Route path="/signup" component={SignUp} />
-        <SecureRoute path="/profile" component={ProfilePage} />
+        <Switch>
+          <Route path="/" exact component={HomePage} />
+          <Route 
+            path="/login"
+            render={() => <LoginPage baseUrl={config.url} />}
+          />
+          <Route path="/implicit/callback" component={ImplicitCallback} />
+          <Route path="/signup" component={SignUp} />
+          <SecureRoute path="/profile" component={ProfilePage} />
+        </Switch>
+
 
       </div>
 

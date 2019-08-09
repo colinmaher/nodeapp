@@ -72,7 +72,6 @@ const SignInSide = withAuth((props) => {
               baseUrl={props.baseUrl}
               onSuccess={onSuccess}
               onError={onError}/>
-            
           </div>
         </Grid>
       </Grid>

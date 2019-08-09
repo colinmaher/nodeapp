@@ -15,21 +15,8 @@ import Container from '@material-ui/core/Container';
 // import { Theme as DefaultTheme } from './createMuiTheme';
 // import { useTheme } from '@material-ui/styles';
 
-import SignInSide from "./SignInSide";
-import { Link, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import RegistrationForm from './RegistrationForm';
-
-function MadeWithLove() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Built with love by the '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Material-UI
-      </Link>
-            {' team.'}
-        </Typography>
-    );
-}
 
 export const useStyles = makeStyles(theme => ({
     '@global': {
@@ -58,7 +45,6 @@ export const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
     const classes = useStyles();
-    console.log(classes)
     return (
 
         <Container component="main" maxWidth="xs">
@@ -69,16 +55,9 @@ export default function SignUp() {
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign up
-                    </Typography>
+                </Typography>
                 <RegistrationForm classes={classes} />
             </div>
-            <Box mt={5}>
-                <MadeWithLove />
-            </Box>
-            <Route path="/signin" component={SignInSide}></Route>
         </Container>
-        
-        
-
     );
 }

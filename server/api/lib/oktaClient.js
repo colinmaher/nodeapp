@@ -1,4 +1,5 @@
 const okta = require('@okta/okta-sdk-nodejs');
+require('dotenv').config()
 
 const client = new okta.Client({
   orgUrl: 'https://dev-120993.okta.com',

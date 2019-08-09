@@ -6,10 +6,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import PropTypes from 'prop-types';
 // import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import { BrowserRouter as Link } from "react-router-dom";
 
 import OktaAuth from '@okta/okta-auth-js';
 import { withAuth } from '@okta/okta-react';
+
+import { Link } from "react-router-dom";
 
 import config from '../../app.config';
 
