@@ -61,8 +61,7 @@ app.get("/health", function (req, res) {
 // mongoose.set('debug', true);
 
 app.use(function (req, res, next) {
-  console.log(req.body);
-  console.log(req.session);
+  
   next()
 });
 app.use(require('./api/routes'));

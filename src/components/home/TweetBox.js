@@ -20,47 +20,46 @@ export default withAuth(class Feed extends React.Component {
   }
 
   handleTweetChange(e) {
-    if (!this.state.validTweet && e.target.value.length < 240) {
+    const tweet = e.target.value;
+    if (tweet.length > 280 || tweet.length < 1) {
       this.setState({
-        validTweet: true
+        validTweet: false
+      })
+    }
+    else {
+      this.setState({
+        validTweet: true,
+      }, () => {
+        this.setState({ tweet: tweet })
       })
     }
   }
 
   handleTweetSubmit(e) {
     e.preventDefault();
-    if (e.target.value.length > 240) {
-      this.setState({
-        validTweet: false,
-      })
+    const payload = {
+      tweet: this.state.tweet,
     }
-    else {
-      this.setState({
-        tweet: e.target.value,
-        validTweet: true,
-      })
-      const payload = {
-        tweet: this.state.tweet,
-      }
-      fetch(config.serverUrl + '/tweet', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(res => {
-          this.setState({
-            tweetSuccess: true
-          })
+    fetch(config.serverUrl + '/tweet', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        this.setState({
+          tweetSuccess: true,
+          tweet: '',
         })
-        .catch(err => {
-          this.setState({
-            tweetSuccess: false
-          })
-        });
-    }
+      })
+      .catch(err => {
+        this.setState({
+          tweetSuccess: false
+        })
+      });
+      e.target.reset();
   }
 
   render() {
@@ -68,6 +67,8 @@ export default withAuth(class Feed extends React.Component {
       <form autoComplete="off" onSubmit={this.handleTweetSubmit}>
         <TextField
           id="outlined-dense-multiline"
+          type="text"
+          ref="TweetBox"
           margin="dense"
           variant="outlined"
           multiline
@@ -77,8 +78,8 @@ export default withAuth(class Feed extends React.Component {
         />
         {
           this.state.validTweet ?
-            <Button type="submit" variant="contained" color="primary" value="Tweet">Tweet</Button> :
-            <Button type="submit" variant="contained" color="primary" disabled value="Tweet">Tweet</Button>
+            <Button type="submit" variant="contained" value="Tweet">Tweet</Button> :
+            <Button type="submit" variant="contained" disabled value="Tweet">Tweet</Button>
         }
 
       </form>
