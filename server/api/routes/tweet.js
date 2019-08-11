@@ -1,9 +1,11 @@
 const router = require('express').Router();
 
 router.post('/', (req, res, next) => {
-  console.log(req.body)
-  console.log(req.body.payload)
+  // console.log(req.body)
+  // console.log(req.body.payload)
   if (!req.body) return res.sendStatus(400);
+  console.log(req);
+  if (req.sessionID)
   return res.sendStatus(200)
 });
 

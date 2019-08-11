@@ -3,7 +3,8 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
-import Feed from './Feed.js'
+import Feed from './Feed'
+import TweetBox from './TweetBox'
 
 
 export default withAuth(class HomePage extends Component {
@@ -47,6 +48,7 @@ export default withAuth(class HomePage extends Component {
     return this.state.authenticated ? 
      (
       <div>
+        <TweetBox />
         <Feed />
       </div>      
     ) : ( <Redirect to={{ pathname: '/login' }}/> );

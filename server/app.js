@@ -20,7 +20,6 @@ require('dotenv').config()
 const helmet = require('helmet');
 const router = require('express').Router();
 const redis = require("redis");
-console.log(process.env.REDISCACHEHOSTNAME);
 const client = redis.createClient(6380, process.env.REDISCACHEHOSTNAME,
     {auth_pass: process.env.REDISCACHEKEY, tls: {servername: process.env.REDISCACHEHOSTNAME}});
 // const secret = require('./secrets').secret;
@@ -66,8 +65,7 @@ app.get("/health", function (req, res) {
 // mongoose.set('debug', true);
 
 app.use(function (req, res, next) {
-  console.log(req.body);
-  console.log(req.session);
+  
   next()
 });
 app.use(require('./api/routes'));
