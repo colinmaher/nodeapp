@@ -56,7 +56,6 @@ export default withAuth(class Feed extends React.Component {
           })
         })
         .catch(err => {
-          console.log(err);
           this.setState({
             tweetSuccess: false
           })
@@ -78,8 +77,8 @@ export default withAuth(class Feed extends React.Component {
         />
         {
           this.state.validTweet ?
-            <Button type="submit" primary value="Tweet">Tweet</Button> :
-            <Button type="submit" primary disabled value="Tweet">Tweet</Button>
+            <Button type="submit" variant="contained" color="primary" value="Tweet">Tweet</Button> :
+            <Button type="submit" variant="contained" color="primary" disabled value="Tweet">Tweet</Button>
         }
 
       </form>
