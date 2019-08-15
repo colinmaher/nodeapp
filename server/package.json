@@ -1,0 +1,26 @@
+{
+  "name": "twtr-backend",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "echo 'No build configured\n'",
+    "start": "nodemon app.js",
+    "start:prod": "node app.js"
+  },
+  "dependencies": {
+    "@okta/okta-sdk-nodejs": "^2.0.0",
+    "bluebird": "^3.5.5",
+    "connect-redis": "^3.4.2",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "errorhandler": "^1.5.1",
+    "express": "^4.17.1",
+    "express-session": "^1.16.1",
+    "helmet": "^3.20.0",
+    "morgan": "^1.9.1",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
