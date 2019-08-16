@@ -1,57 +1,31 @@
 {
   "name": "nodeapp",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.0.2",
-    "@material-ui/icons": "^4.0.1",
-    "@okta/okta-react": "^1.2.0",
-    "@okta/okta-sdk-nodejs": "^2.0.0",
-    "@okta/okta-signin-widget": "^2.20.1",
-    "bluebird": "^3.5.5",
-    "connect-redis": "^3.4.2",
-    "cors": "^2.8.5",
-    "dotenv": "^8.0.0",
-    "errorhandler": "^1.5.1",
-    "express-session": "^1.16.1",
-    "helmet": "^3.20.0",
-    "morgan": "^1.9.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-redux": "^7.0.3",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
-    "redis": "^2.8.0",
-    "redux": "^4.0.1",
-    "redux-logger": "^3.0.6",
-    "typeface-roboto": "0.0.54"
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colinmaher/nodeapp.git"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/colinmaher/nodeapp/issues"
+  },
+  "homepage": "https://github.com/colinmaher/nodeapp#readme",
   "scripts": {
-    "server": "nodemon ./server/app.js",
-    "dev": "concurrently \"npm run server \" \"npm start\" ",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "postinstall": "run-p install:server install:client",
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "start": "run-p start:server start:client",
+    "start:server": "npm run start --prefix server",
+    "start:client": "npm run start --prefix client",
+    "build": "run-p build:server build:client",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build"
   },
   "devDependencies": {
-    "concurrently": "^4.1.1",
-    "nodemon": "^1.19.1",
-    "react-test-renderer": "^16.8.6"
+    "npm-run-all": "^4.0.2"
   }
 }
