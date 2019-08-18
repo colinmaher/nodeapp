@@ -1,7 +1,13 @@
 {
   "name": "twtr-backend",
-  "description": "",
+  "description": "Backend files for twtr",
+  "license": "ISC",
   "main": "app.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colinmaher/nodeapp.git"
+  },
   "scripts": {
     "build": "echo 'No build configured\n'",
     "start": "nodemon app.js",

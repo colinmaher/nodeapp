@@ -1,14 +1,14 @@
 {
   "name": "nodeapp",
   "version": "1.0.0",
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "description": "Simple Twitter Clone",
   "main": "index.js",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/colinmaher/nodeapp.git"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Colin Maher",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/colinmaher/nodeapp/issues"

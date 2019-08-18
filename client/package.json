@@ -1,7 +1,13 @@
 {
   "name": "nodeapp",
   "version": "0.1.0",
+  "license": "ISC",
   "private": true,
+  "description": "Client side files for twtr",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colinmaher/nodeapp.git"
+  },
   "dependencies": {
     "@material-ui/core": "^4.0.2",
     "@material-ui/icons": "^4.0.1",
