@@ -59,11 +59,7 @@ app.get("/health", function (req, res) {
 //Configure Mongoose
 // mongoose.connect('mongodb://localhost/twtr');
 // mongoose.set('debug', true);
-
-app.use(function (req, res, next) {
-  
-  next()
-});
+app.use('/api/', router);
 app.use(require('./api/routes'));
 
 
@@ -92,4 +88,4 @@ app.use((req, res, err) => {
   });
 });
 
-app.listen(8000, () => console.log('Server running on http://localhost:8000/'));
+app.listen(80, () => console.log('Server running on port 80'));

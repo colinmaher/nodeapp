@@ -1,2 +1,0 @@
-kubectl run twtr-backend --image us.gcr.io/twtr-backend/production-web-server:latest --port=8080
-kubectl expose deployment twtr-backend

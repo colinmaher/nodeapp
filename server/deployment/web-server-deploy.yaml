@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: "production-web-server-sha256"
-        image: "us.gcr.io/twtr-backend/production-web-server@sha256:a4c36268bb1eef791f4fd787411770aca13de3e91cdb1eb63c596865955d1f4f"
+        image: "us.gcr.io/twtr-backend/production-web-server@sha256:accb44b11a13bc840afd547b1e093300e7350880de3a02a796f8f93d81982462"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
