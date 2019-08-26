@@ -14,7 +14,7 @@
     "start:prod": "node app.js"
   },
   "dependencies": {
-    "@okta/okta-sdk-nodejs": "^2.0.0",
+    "@okta/okta-sdk-nodejs": "^2.0.1",
     "bluebird": "^3.5.5",
     "connect-redis": "^3.4.2",
     "cors": "^2.8.5",
