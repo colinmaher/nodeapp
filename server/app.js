@@ -88,4 +88,4 @@ app.use((req, res, err) => {
   });
 });
 
-app.listen(80, () => console.log('Server running on port 80'));
+app.listen(80, () => console.log('Server running on port ' + process.env.PORT));

@@ -61,7 +61,7 @@ class RegistrationForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    fetch(config.serverUrl +'/users', {
+    fetch('/users', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

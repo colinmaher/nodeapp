@@ -22,7 +22,7 @@ export default withAuth(class Feed extends React.Component {
     }
 
     fetchRelevantTweets() {
-        fetch(config.serverUrl + '/tweet', {
+        fetch('/tweet', {
             method: 'GET',
             headers: {
               'Accept': 'application/json',

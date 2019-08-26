@@ -5,6 +5,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 import Feed from './Feed'
 import TweetBox from './TweetBox'
+import Container from '@material-ui/core/Container'
 
 
 export default withAuth(class HomePage extends Component {
@@ -47,10 +48,10 @@ export default withAuth(class HomePage extends Component {
       <button onClick={this.login}><Link to='/login'>Login</Link><br /></button>;
     return this.state.authenticated ? 
      (
-      <div>
+      <Container m={1} maxWidth="sm">
         <TweetBox />
         <Feed />
-      </div>      
+      </Container>      
     ) : ( <Redirect to={{ pathname: '/login' }}/> );
   }
 });
