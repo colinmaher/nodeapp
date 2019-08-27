@@ -3,8 +3,6 @@ import { Link, Redirect } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 import fetch from 'isomorphic-fetch'
 import config from '../../app.config';
-
-
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField';
@@ -20,6 +18,7 @@ export default withAuth(class Feed extends React.Component {
     }
     this.handleTweetChange = this.handleTweetChange.bind(this)
     this.handleTweetSubmit = this.handleTweetSubmit.bind(this)
+    console.log(this.props.auth)
   }
 
   handleTweetChange(e) {
@@ -38,10 +37,13 @@ export default withAuth(class Feed extends React.Component {
     }
   }
 
-  handleTweetSubmit(e) {
+  async handleTweetSubmit(e) {
     e.preventDefault();
+    
+    const userInfo = await this.props.auth.getUser();
     const payload = {
       tweet: this.state.tweet,
+      userInfo: userInfo
     }
     fetch('/tweet', {
       method: 'POST',
@@ -57,13 +59,17 @@ export default withAuth(class Feed extends React.Component {
           tweet: '',
           validTweet: false,
         })
+        console.log(res.status)
+        console.log("Posted tweet")
+
       })
       .catch(err => {
         this.setState({
           tweetSuccess: false
         })
+        console.log(err)
+        console.log("Error posting tweet")
       });
-    e.target.reset();
   }
 
   render() {
@@ -80,6 +86,7 @@ export default withAuth(class Feed extends React.Component {
               multiline
               placeholder="What's on your mind?"
               rowsMax="4"
+              value={this.state.tweet}
               onChange={this.handleTweetChange}
               style={{ 'width': '100%'}}
             />

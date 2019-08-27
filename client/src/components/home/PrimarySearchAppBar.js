@@ -14,6 +14,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import PersistentDrawerLeft from '../shared/PersistentDrawerLeft';
 
 import { Link } from 'react-router-dom';
 import MenuOptions from './MenuOptions'
@@ -87,6 +88,7 @@ export default function PrimarySearchAppBar() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -100,13 +102,20 @@ export default function PrimarySearchAppBar() {
     }
 
     function handleMenuClose() {
-        console.log("handlemenuclose")
         setAnchorEl(null);
         handleMobileMenuClose();
     }
 
     function handleMobileMenuOpen(event) {
         setMobileMoreAnchorEl(event.currentTarget);
+    }
+
+    function handleDrawerOpen() {
+        setDrawerOpen(true);
+    }
+
+    function handleDrawerClose() {
+        setDrawerOpen(false);
     }
 
     const menuId = 'primary-search-account-menu';
@@ -120,7 +129,7 @@ export default function PrimarySearchAppBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
             onClick={handleMenuClose}
-            style={{ padding: 'none'}}
+            style={{ padding: 'none' }}
         >
 
             <MenuOptions />
@@ -166,6 +175,7 @@ export default function PrimarySearchAppBar() {
                 <p>Profile</p>
             </MenuItem>
         </Menu>
+
     );
 
     return (
@@ -177,6 +187,7 @@ export default function PrimarySearchAppBar() {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="Open drawer"
+                        onClick={handleDrawerOpen}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -232,6 +243,7 @@ export default function PrimarySearchAppBar() {
                     </div>
                 </Toolbar>
             </AppBar>
+            <PersistentDrawerLeft drawerOpen={drawerOpen} handleDrawerClose={handleDrawerClose} />
             {renderMobileMenu}
             {renderMenu}
         </div>

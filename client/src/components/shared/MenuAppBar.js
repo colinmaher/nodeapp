@@ -11,6 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import PersistentDrawerLeft from './PersistentDrawerLeft';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,6 +29,7 @@ export default function MenuAppBar() {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  
   const open = Boolean(anchorEl);
 
   function handleChange(event) {
@@ -41,6 +43,7 @@ export default function MenuAppBar() {
   function handleClose() {
     setAnchorEl(null);
   }
+
 
   return (
     <div className={classes.root}>
