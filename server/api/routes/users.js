@@ -1,4 +1,5 @@
-const router = require('express').Router();
+const app = require('express')
+const router = app.Router();
 const oktaClient = require('../lib/oktaClient');
 
 /* Create a new User (register). */

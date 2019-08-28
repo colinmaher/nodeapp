@@ -1,10 +1,46 @@
-const router = require('express').Router();
+const app = require('express')
+const router = app.Router();
 const mongoose = require('mongoose');
-const TweetModel = require('../models/tweetModel')
+const TweetModel = require('../models/tweetModel').TweetModel
+const UserModel = require('../models/userModel').UserModel
 
-router.post('/', (req, res, next) => {
-  // console.log(req.body);
-  console.log(req.session);
+async function parseTags(tweet, db) {
+  const tokens = tweet.split(' ')
+  const tags = [];
+  for (token in tokens) {
+    if (token[0] === '#') {
+      const tag = token.substring(1, token.length)
+      await UserModel.findOne({ displayName: mention }, function (err, doc) {
+        if (err) {
+          continue
+        }
+        tags.push({ tag: token, uid: doc.id })
+      })
+    }
+  }
+  return tags
+}
+
+async function parseMentions(tweet, db) {
+  const tokens = tweet.split(' ')
+  const mentions = [];
+  for (token in tokens) {
+    if (token[0] === '@') {
+      const mention = token.substring(1, token.length)
+      console.log(mention)
+      await UserModel.findOne({ displayName: mention }, function (err, doc) {
+        if (err) {
+          continue
+        }
+        mentions.push({ mention: token, uid: doc.id })
+      })
+
+    }
+  }
+  return mentions
+}
+
+async function postTweet(req, res) {
   const db = mongoose.connection;
   // console.log(db)
   db.on('error', console.error.bind(console, 'connection error:'));
@@ -12,19 +48,32 @@ router.post('/', (req, res, next) => {
     // we're connected!
     console.log("connected to mongo")
   });
-  
+
   if (!req.body) return res.sendStatus(400);
-  if (req.body.userInfo)
-    if (req.body.tweet.length < 280 && req.body.tweet.length > 0) {
-      const tweet = new TweetModel({ authorName: req.body.userInfo.name, authorId: req.body.userInfo.sub })
-      // console.log(req.body.userInfo.name)
-      TweetModel.create(tweet);
+  const tweet = req.body.tweet;
+  const info = req.body.userInfo;
+  if (info)
+    if (tweet.length < 280 && tweet.length > 0) {
+      const tags = await parseTags(tweet)
+      const mentions = await parseMentions(tweet)
+      const processedTweet = { displayName: info.name, authorId: info.sub, text: tweet, tags: tags, mentions: mentions, }
+      console.log(processedTweet)
+      await TweetModel.create(processedTweet);
       return res.sendStatus(200);
     }
     else {
       return res.status(400).send("Tweets must be fewer than 280 characters in length.")
     }
   else return res.status(400).send("Authentication error please sign in.")
+}
+
+router.post('/', async (req, res, next) => {
+  console.log(req.body);
+  console.log(req.session);
+  postTweet(req, res).catch(err => {
+    console.log(err);
+    return res.status(400).send("Error posting tweet");
+  });
 });
 
 module.exports = router;
