@@ -56,7 +56,7 @@ export default function Feed(props) {
       <Button onClick={() => setLoading(true)}>Refresh</Button>
       {
         !loading
-          ? feedSuccess ? dumbFeed.map((tweet) => <Tweet tweet={tweet}></Tweet>) : <Typography variant="body1">Error fetching feed</Typography>
+          ? feedSuccess ? dumbFeed.map((tweet, i) => <Tweet key={i} tweet={tweet}></Tweet>) : <Typography variant="body1">Error fetching feed</Typography>
           : <Typography variant="h6">Loading</Typography>
       }
     </>

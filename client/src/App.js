@@ -13,13 +13,12 @@ import PrimarySearchAppBar from './components/home/PrimarySearchAppBar';
 
 
 export default withAuth(class App extends Component {
-
   render() {
     return (
       <div className="App">
         <PrimarySearchAppBar />
         <Switch>
-          <Route path="/" exact component={HomePage} />
+          <Route path="/" exact render={() => <HomePage auth={this.props.auth}></HomePage>}/>
           <Route 
             path="/login"
             render={() => <LoginPage auth={this.props.auth} baseUrl={config.url} />}
