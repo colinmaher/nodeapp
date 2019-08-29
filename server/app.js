@@ -47,12 +47,12 @@ app.use(session({
 app.use(router)
 
 if (!isProduction) {
-  //Configure Mongoose
-  mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true })
   mongoose.set('debug', true)
   app.use(errorHandler())
   app.use(morgan('dev'))
-  
+
+  //Connect db
+  mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true }).catch(err => { morgan(err) })
 }
 else {
   app.use(morgan('combined'))

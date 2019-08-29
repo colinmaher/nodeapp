@@ -1,12 +1,49 @@
 const app = require('express')
+const mongoose = require('mongoose')
 const router = app.Router();
 const oktaClient = require('../lib/oktaClient');
 const mongoose = require('mongoose');
 const UserModel = require('../models/userModel').UserModel
 
 /* Create a new User (register). */
-router.post('/', async (req, res, next) => {
+
+const UserModel = require('../models/userModel').UserModel
+
+async function createMongoUser(req, user) {
+  const db = mongoose.connection;
+  console.log(user)
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function () {
+    console.log("connected to mongo")
+  });
+
+  if (user) {
+    const processedUser = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      oktaId: user.sub,
+      username: user.email,
+      email: user.email
+    }
+    console.log(processedUser)
+    await UserModel.create(processedUser)
+    .then(()=>{
+      res.status(201).send(processedUser);
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(400).send("Can't create user right now. Try again later.")
+    });
+  }
+
+
+  else { res.status(400).send("Authentication error please sign in.") }
+}
+
+/* Create a new User (register). */
+router.post('/', async (req, res) => {
   console.log(req.body)
+  if (!req.body) return res.sendStatus(400);
   const db = mongoose.connection;
   // console.log(db)
   db.on('error', console.error.bind(console, 'connection error:'));
@@ -14,7 +51,6 @@ router.post('/', async (req, res, next) => {
     // we're connected!
     console.log("connected to mongo")
   });
-  if (!req.body) return res.sendStatus(400);
   const newUser = {
     profile: {
       firstName: req.body.firstName,
@@ -33,24 +69,11 @@ router.post('/', async (req, res, next) => {
     .createUser(newUser)
     .then(async user => {
       console.log(user)
-      await UserModel.create({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        oktaId: user.sub,
-        username: user.email,
-        email: user.email
-      })
-        .catch(err => {
-          console.log(err)
-          res.status(400)
-          res.send(err)
-        })
-      res.status(201);
-      res.send(user);
+      await createMongoUser(user).catch((err) => console.log(err))
     })
     .catch(err => {
-      res.status(400);
-      res.send(err);
+      console.log(err)
+      res.status(400).send(err);
     });
 });
 

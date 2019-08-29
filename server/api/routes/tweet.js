@@ -69,10 +69,22 @@ async function postTweet(req, res) {
   else return res.status(400).send("Authentication error please sign in.")
 }
 
-router.post('/', async (req, res, next) => {
+async function updateLike(req) {
+  
+}
+
+router.post('/updateLike', async (req, res) => {
+  await updateLike(req).catch((err) => {
+    console.log(err)
+    return res.status(400)
+      .send("Error updating like")
+  })
+})
+
+router.post('/', async (req, res) => {
   console.log(req.body);
   console.log(req.session);
-  postTweet(req, res).catch(err => {
+  await postTweet(req, res).catch(err => {
     console.log(err);
     return res.status(400).send("Error posting tweet");
   });

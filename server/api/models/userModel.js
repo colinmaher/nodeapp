@@ -4,8 +4,8 @@ const mongoose =  require('mongoose');
 const userSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
-    username: String,
-    oktaId: String,
+    displayName: String,
+    oktaId: String,  
     email: String,
     profilePicUrl: {type: String, default: ""},
     tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
