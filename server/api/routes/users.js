@@ -1,10 +1,19 @@
 const app = require('express')
 const router = app.Router();
 const oktaClient = require('../lib/oktaClient');
+const mongoose = require('mongoose');
+const UserModel = require('../models/userModel').UserModel
 
 /* Create a new User (register). */
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
   console.log(req.body)
+  const db = mongoose.connection;
+  // console.log(db)
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function () {
+    // we're connected!
+    console.log("connected to mongo")
+  });
   if (!req.body) return res.sendStatus(400);
   const newUser = {
     profile: {
@@ -20,9 +29,10 @@ router.post('/', (req, res, next) => {
     }
   };
   
-  oktaClient
+  await oktaClient
     .createUser(newUser)
     .then(user => {
+      UserModel.create({user})
       res.status(201);
       res.send(user);
     })

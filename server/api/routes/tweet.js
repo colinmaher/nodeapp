@@ -1,27 +1,29 @@
 const app = require('express')
 const router = app.Router();
 const mongoose = require('mongoose');
-const TweetModel = require('../models/tweetModel').TweetModel
 const UserModel = require('../models/userModel').UserModel
+const TweetModel = require('../models/tweetModel').TweetModel
 
-async function parseTags(tweet, db) {
+async function parseTags(tweet) {
   const tokens = tweet.split(' ')
   const tags = [];
-  for (token in tokens) {
-    if (token[0] === '#') {
+  for (let i=0; i<tokens.length; ++i) {
+    console.log(token)
+    if (tokens[i][0] === '#') {
       const tag = token.substring(1, token.length)
-      await UserModel.findOne({ displayName: mention }, function (err, doc) {
+      await UserModel.findOne({ displayName: tag }, function (err, doc) {
         if (err) {
           continue
         }
-        tags.push({ tag: token, uid: doc.id })
+        tags.push({ tag: token, tagid: doc.id || null })
       })
     }
   }
+  console.log(tags)
   return tags
 }
 
-async function parseMentions(tweet, db) {
+async function parseMentions(tweet) {
   const tokens = tweet.split(' ')
   const mentions = [];
   for (token in tokens) {

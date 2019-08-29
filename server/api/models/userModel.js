@@ -1,14 +1,15 @@
 const mongoose =  require('mongoose');
-const tweetSchema = require('./tweetModel').TweetSchema;
+// const tweetSchema = require('./tweetModel').TweetSchema;
+const TweetModel = require('./tweetModel').TweetModel;
 const userSchema = new mongoose.Schema({
     name: String,
     displayName: String,
     id: String,
     email: String,
-    profilePicUrl: String,
-    tweets: { type: [tweetSchema], default: [] },
-    followers: { type: [this], default: [] },
-    following: { type: [this], default: [] },
+    profilePicUrl: {type: String, default: ""},
+    tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
     retweets: { type: Number, default: 0 },
     likes: { type: Number, default: 0 },
     created: { type: Date, default: Date.now },
