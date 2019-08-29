@@ -10,8 +10,8 @@ const userSchema = new mongoose.Schema({
     tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
-    retweets: { type: Number, default: 0 },
-    likes: { type: Number, default: 0 },
+    retweets: [{ type:  mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
+    likes: [{ type:  mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },
 });
