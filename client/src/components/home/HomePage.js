@@ -49,7 +49,7 @@ export default withAuth(class HomePage extends Component {
     return this.state.authenticated ? 
      (
       <Container m={1} maxWidth="sm">
-        <TweetBox />
+        <TweetBox auth={this.props.auth}/>
         <Feed />
       </Container>      
     ) : ( <Redirect to={{ pathname: '/login' }}/> );
