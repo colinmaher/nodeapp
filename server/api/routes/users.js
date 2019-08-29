@@ -28,11 +28,23 @@ router.post('/', async (req, res, next) => {
       }
     }
   };
-  
+
   await oktaClient
     .createUser(newUser)
-    .then(user => {
-      UserModel.create({user})
+    .then(async user => {
+      console.log(user)
+      await UserModel.create({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        oktaId: user.sub,
+        username: user.email,
+        email: user.email
+      })
+        .catch(err => {
+          console.log(err)
+          res.status(400)
+          res.send(err)
+        })
       res.status(201);
       res.send(user);
     })

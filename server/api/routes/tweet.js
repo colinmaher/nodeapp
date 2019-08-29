@@ -28,7 +28,7 @@ async function parseMentions(tweet) {
   const mentions = [];
   for (token in tokens) {
     if (token[0] === '@') {
-      const mention = token.substring(1, token.length)
+      const mention = token.substring(1)
       console.log(mention)
       await UserModel.findOne({ displayName: mention }, function (err, doc) {
         if (err) {

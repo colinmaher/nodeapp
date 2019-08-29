@@ -1,10 +1,11 @@
 const mongoose =  require('mongoose');
 // const tweetSchema = require('./tweetModel').TweetSchema;
-const TweetModel = require('./tweetModel').TweetModel;
+// const TweetModel = require('./tweetModel').TweetModel;
 const userSchema = new mongoose.Schema({
-    name: String,
-    displayName: String,
-    id: String,
+    firstName: String,
+    lastName: String,
+    username: String,
+    oktaId: String,
     email: String,
     profilePicUrl: {type: String, default: ""},
     tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
