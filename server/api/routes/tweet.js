@@ -9,18 +9,17 @@ async function parseTags(tweet) {
   const tokens = tweet.split(' ')
   const tags = [];
   for (let i = 0; i < tokens.length; ++i) {
-    console.log(token)
+    console.log(tokens[i])
     if (tokens[i][0] === '#') {
-      const tag = token.substring(1, token.length)
+      const tag = tokens[i].substring(1, tokens[i].length)
       await TagModel.findOne({ tag: tag })
         .then(() => {
           tags.push({
-            tag: token, tagid: doc.id || null
+            tag: tokens[i], tagid: doc.id || null
           })
         })
         .catch((err) => {
           console.log(err)
-          continue
         })
     }
   }
@@ -31,17 +30,16 @@ async function parseTags(tweet) {
 async function parseMentions(tweet) {
   const tokens = tweet.split(' ')
   const mentions = [];
-  for (token in tokens) {
-    if (token[0] === '@') {
-      const mention = token.substring(1)
+  for (let i = 0; i < tokens.length; ++i) {
+    if (tokens[i][0] === '@') {
+      const mention = tokens[i].substring(1)
       console.log(mention)
       await UserModel.findOne({ username: mention })
         .then(() => {
-          mentions.push({ mention: token, uid: doc.id })
+          mentions.push({ mention: tokens[i], uid: doc.id })
         })
         .catch((err) => {
           console.log(err)
-          continue
         })
     }
   }
@@ -65,7 +63,7 @@ async function postTweet(req, res) {
     if (tweet.length < 280 && tweet.length > 0) {
       const tags = await parseTags(tweet)
       const mentions = await parseMentions(tweet)
-      const processedTweet = { username: info.name, authorId: info.sub, text: tweet, tags: tags, mentions: mentions, }
+      const processedTweet = { username: info.name, oktaId: info.sub, text: tweet, tags: tags, mentions: mentions, }
       console.log(processedTweet)
       await TweetModel.create(processedTweet)
         .then(() => {

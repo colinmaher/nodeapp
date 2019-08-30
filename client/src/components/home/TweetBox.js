@@ -35,7 +35,7 @@ export default class TweetBox extends React.Component {
   async handleTweetSubmit(e) {
     e.preventDefault();
     
-    const userInfo = await this.props.auth.getUser();
+    const userInfo = await this.props.auth.getUser(); // get mongo user instead from session
     const payload = {
       tweet: this.state.tweet,
       userInfo: userInfo

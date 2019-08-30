@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
-import { withRouter } from 'react-router-dom'
 
-export default withRouter(class OktaSignInWidget extends Component {
+
+export default class OktaSignInWidget extends Component {
   componentDidMount() {
     const el = ReactDOM.findDOMNode(this);
     this.widget = new OktaSignIn({
@@ -15,7 +15,17 @@ export default withRouter(class OktaSignInWidget extends Component {
         {
           title: 'Sign Up',
           className: 'btn-customAuth',
-          click: () => { this.props.history.push('/signup') },
+          click: async () => {
+            this.props.history.push('/signup');
+            await fetch('/users/getMyData', {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ this.props.auth. })
+            })
+          },
 
         }
       ],
@@ -31,4 +41,4 @@ export default withRouter(class OktaSignInWidget extends Component {
   render() {
     return <div style={{ position: 'fixed', }} />
   }
-});
+};

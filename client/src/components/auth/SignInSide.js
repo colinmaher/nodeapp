@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignInSide = withAuth((props) => {
+const SignInSide = (props) => {
   const classes = useStyles();
 
   function onSuccess(res) {
@@ -71,7 +71,8 @@ const SignInSide = withAuth((props) => {
             <OktaSignInWidget className={classes.form}
               baseUrl={props.baseUrl}
               onSuccess={onSuccess}
-              onError={onError}/>
+              onError={onError}
+              auth={props.auth}/>
           </div>
         </Grid>
       </Grid>
@@ -80,5 +81,5 @@ const SignInSide = withAuth((props) => {
 
 
   )
-});
+};
 export default SignInSide;

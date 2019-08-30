@@ -16,8 +16,7 @@ async function getTweets(req, res) {
   // pull from mongo for now
   // later make redis cache of feeds and update them as tweets come in
   
-  await TweetModel.find({})
-
+  await UserModel.findById(req.body.id)
 }
 router.get('/', async (req, res) => {
   await getTweets().catch((err) => {
