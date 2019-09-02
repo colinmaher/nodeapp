@@ -29,6 +29,6 @@ export default withRouter(class OktaSignInWidget extends Component {
 
 
   render() {
-    return <div style={{ position: 'fixed', }} />
+    return <div style={{ overflow: 'auto', }} />
   }
 });

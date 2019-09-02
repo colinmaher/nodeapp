@@ -1,14 +1,13 @@
 // src/Home.js
 
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { withAuth } from '@okta/okta-react';
+import { Redirect } from 'react-router-dom';
 import Feed from './Feed'
 import TweetBox from './TweetBox'
 import Container from '@material-ui/core/Container'
 
 
-export default withAuth(class HomePage extends Component {
+export default class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = { authenticated: null };
@@ -43,15 +42,12 @@ export default withAuth(class HomePage extends Component {
   render() {
     if (this.state.authenticated === null) return null;
 
-    const button = this.state.authenticated ?
-      <button onClick={this.logout}><Link to='/'>Logout</Link><br /></button> :
-      <button onClick={this.login}><Link to='/login'>Login</Link><br /></button>;
     return this.state.authenticated ? 
      (
       <Container m={1} maxWidth="sm">
         <TweetBox auth={this.props.auth}/>
-        <Feed />
+        <Feed auth={this.props.auth}/>
       </Container>      
     ) : ( <Redirect to={{ pathname: '/login' }}/> );
   }
-});
+};

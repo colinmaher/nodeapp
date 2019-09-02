@@ -4,7 +4,7 @@ const router = app.Router();
 const oktaClient = require('../lib/oktaClient');
 const UserModel = require('../models/userModel').UserModel
 
-async function createMongoUser(req, user) {
+async function createMongoUser(res, user) {
   const db = mongoose.connection;
   console.log(user)
   db.on('error', console.error.bind(console, 'connection error:'));
@@ -14,21 +14,19 @@ async function createMongoUser(req, user) {
 
   if (user) {
     const processedUser = {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      oktaId: user.sub,
-      username: user.email,
-      email: user.email
+      firstName: user.profile.firstName,
+      lastName: user.profile.lastName,
+      oktaId: user.id,
+      username: user.profile.login,
+      email: user.profile.email
     }
     console.log(processedUser)
-    await UserModel.create(processedUser)
-    .then(()=>{
-      res.status(201).send(processedUser);
-    })
-    .catch((err) => {
-      console.log(err)
-      res.status(400).send("Can't create user right now. Try again later.")
-    });
+    try {
+      await UserModel.create(processedUser)
+    }
+    catch (err) {
+      throw Error(err)
+    }
   }
 
 
@@ -59,16 +57,17 @@ router.post('/', async (req, res) => {
     }
   };
 
-  await oktaClient
-    .createUser(newUser)
-    .then(async user => {
-      console.log(user)
-      await createMongoUser(user).catch((err) => console.log(err))
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(400).send(err);
-    });
+
+  try {
+    const user = await oktaClient.createUser(newUser)
+    console.log(user)
+    await createMongoUser(res, user)
+    res.status(200).send( user )
+  }
+  catch (err) {
+    // console.log(err)
+    res.status(400).send(err);
+  }
 });
 
 module.exports = router;

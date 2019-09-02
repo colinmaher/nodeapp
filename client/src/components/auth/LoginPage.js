@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { withAuth } from '@okta/okta-react';
+// import { withAuth } from '@okta/okta-react';
 import SignInSide from './SignInSide';
 
 export default class LoginPage extends Component {

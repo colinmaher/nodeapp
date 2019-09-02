@@ -13,7 +13,7 @@ async function parseTags(tweet) {
     if (tokens[i][0] === '#') {
       const tag = token.substring(1, token.length)
       await TagModel.findOne({ tag: tag })
-        .then(() => {
+        .then((doc) => {
           tags.push({
             tag: token, tagid: doc.id || null
           })
@@ -35,13 +35,12 @@ async function parseMentions(tweet) {
     if (token[0] === '@') {
       const mention = token.substring(1)
       console.log(mention)
-      await UserModel.findOne({ username: mention })
-        .then(() => {
+      UserModel.findOne({ username: mention })
+        .then((doc) => {
           mentions.push({ mention: token, uid: doc.id })
         })
         .catch((err) => {
           console.log(err)
-          continue
         })
     }
   }

@@ -12,7 +12,7 @@ export default function Feed(props) {
   const [dumbFeed, setDumbFeed] = useState([
     {
       text: "hello"
-    }, 
+    },
     {
       text: "world"
     },
@@ -23,40 +23,26 @@ export default function Feed(props) {
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   // const [drawerOpen, setDrawerOpen] = React.useState(false);
   useEffect(() => {
-    // fetchRelevantTweets()
-    setTimeout(()=>{ setLoading(false) }, 2000)
-  }, [loading])
-  async function fetchRelevantTweets() {
-    if (loading) {
-      const tweetPromise = await fetch('/tweets', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: {},
-      })
-        .then(res => {
-          setFeed(res.tweets)
-          setFeedSuccess(true)
-        })
-        .catch(err => {
-          console.log(err)
-          setFeedSuccess(false)
-        });
+    async function waitForTweets() {
+      setLoading(true)
+      try {
+        const tweets = await props.userData.tweets
+        setFeed(tweets)
+        setFeedSuccess(true)
+      }
+      catch (err) {
+        setFeedSuccess(false)
+      }
       setLoading(false)
-      return tweetPromise
     }
-  }
-
-
-
+    waitForTweets()
+  })
   return (
     <>
       <Button onClick={() => setLoading(true)}>Refresh</Button>
       {
         !loading
-          ? feedSuccess ? dumbFeed.map((tweet) => <Tweet tweet={tweet}></Tweet>) : <Typography variant="body1">Error fetching feed</Typography>
+          ? feedSuccess ? feed.map((tweet) => <Tweet tweet={tweet}></Tweet>) : <Typography variant="body1">Error fetching tweets</Typography>
           : <Typography variant="h6">Loading</Typography>
       }
     </>
