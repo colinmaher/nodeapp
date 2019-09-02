@@ -12,11 +12,16 @@ async function getUser(res, id) {
 
   // pull from mongo for now
   // later make redis cache of feeds and update them as tweets come in
+<<<<<<< HEAD:server/api/routes/user.js
   try {
     await UserModel.findOne({ oktaId: id})
   } catch (err) {
     throw Error(err)
   }  
+=======
+  
+  await UserModel.findById(req.body.id)
+>>>>>>> 0272285324e5742ee5c0506e25a8c05213f5ce48:server/api/routes/tweets.js
 }
 router.get('/:oktaId', async (req, res) => {
   if (!req.params.oktaId) return res.sendStatus(400);

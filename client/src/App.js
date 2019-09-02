@@ -13,8 +13,11 @@ import PrimarySearchAppBar from './components/home/PrimarySearchAppBar';
 
 
 export default withAuth(class App extends Component {
+<<<<<<< HEAD
   // fetch userdata
   // dispatch redux action to set user data
+=======
+>>>>>>> 0272285324e5742ee5c0506e25a8c05213f5ce48
   render() {
     return (
       <div className="App">

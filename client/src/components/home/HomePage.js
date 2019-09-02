@@ -31,14 +31,6 @@ export default class HomePage extends Component {
     this.checkAuthentication();
   }
 
-  async login() {
-    this.props.auth.login('/');
-  }
-
-  async logout() {
-    this.props.auth.logout('/');
-  }
-
   render() {
     if (this.state.authenticated === null) return null;
 

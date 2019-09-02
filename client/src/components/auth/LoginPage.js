@@ -28,6 +28,7 @@ export default class LoginPage extends Component {
 
     onSuccess(res) {
         if (res.status === 'SUCCESS') {
+            console.log(res.session)
             return this.props.auth.redirect({
                 sessionToken: res.session.token
             });
@@ -41,12 +42,12 @@ export default class LoginPage extends Component {
     onError(err) {
         console.log('error logging in', err);
     }
-
+ 
     render() {
         
         if (this.state.authenticated === null) return null;
         return this.state.authenticated ?
             <Redirect to={{ pathname: '/profile' }} /> :
-            <SignInSide baseUrl={this.props.baseUrl}/>
+            <SignInSide baseUrl={this.props.baseUrl} auth={this.props.auth}/>
     }
 };

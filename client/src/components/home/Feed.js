@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import fetch from 'isomorphic-fetch'
+// import fetch from 'isomorphic-fetch'
 import Tweet from '../shared/Tweet'
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button'
@@ -9,17 +9,17 @@ export default function Feed(props) {
   const [loading, setLoading] = useState(false);
   const [feedSuccess, setFeedSuccess] = useState(true);
   const [feed, setFeed] = useState([]);
-  const [dumbFeed, setDumbFeed] = useState([
-    {
-      text: "hello"
-    },
-    {
-      text: "world"
-    },
-    {
-      text: "#hello @there #general"
-    }
-  ]);
+  // const [dumbFeed, setDumbFeed] = useState([
+  //   {
+  //     text: "hello"
+  //   },
+  //   {
+  //     text: "world"
+  //   },
+  //   {
+  //     text: "#hello @there #general"
+  //   }
+  // ]);
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   // const [drawerOpen, setDrawerOpen] = React.useState(false);
   useEffect(() => {
