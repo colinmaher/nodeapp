@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import OktaSignInWidget from "./OktaSignInWidget";
-import withAuth from '@okta/okta-react/dist/withAuth';
+// import withAuth from '@okta/okta-react/dist/withAuth';
 
 const useStyles = makeStyles(theme => ({
   root: {

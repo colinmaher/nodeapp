@@ -2,11 +2,12 @@
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { withRouter } from 'react-router-dom'
 import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 
 
-export default class OktaSignInWidget extends Component {
+export default withRouter(class OktaSignInWidget extends Component {
   componentDidMount() {
     const el = ReactDOM.findDOMNode(this);
     this.widget = new OktaSignIn({
@@ -33,4 +34,4 @@ export default class OktaSignInWidget extends Component {
   render() {
     return <div style={{ overflow: 'auto', }} />
   }
-};
+});
