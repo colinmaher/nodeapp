@@ -15,16 +15,8 @@ export default class OktaSignInWidget extends Component {
         {
           title: 'Sign Up',
           className: 'btn-customAuth',
-          click: async () => {
+          click: () => {
             this.props.history.push('/signup');
-            await fetch('/users/getMyData', {
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ this.props.auth. })
-            })
           },
 
         }
