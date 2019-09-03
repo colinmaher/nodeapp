@@ -1,20 +1,48 @@
 const app = require('express')
+const mongoose = require('mongoose')
 const router = app.Router();
 const oktaClient = require('../lib/oktaClient');
-const mongoose = require('mongoose');
 const UserModel = require('../models/userModel').UserModel
 
-/* Create a new User (register). */
-router.post('/', async (req, res, next) => {
-  console.log(req.body)
+async function createMongoUser(res, user) {
   const db = mongoose.connection;
-  // console.log(db)
+  console.log(user)
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function () {
-    // we're connected!
     console.log("connected to mongo")
   });
+
+  if (user) {
+    const processedUser = {
+      firstName: user.profile.firstName,
+      lastName: user.profile.lastName,
+      oktaId: user.id,
+      username: user.profile.login,
+      email: user.profile.email
+    }
+    console.log(processedUser)
+    try {
+      await UserModel.create(processedUser)
+    }
+    catch (err) {
+      throw Error(err)
+    }
+  }
+
+
+  else { res.status(400).send("Authentication error please sign in.") }
+}
+
+/* Create a new User (register). */
+router.post('/', async (req, res) => {
+  console.log(req.body)
   if (!req.body) return res.sendStatus(400);
+  const db = mongoose.connection;
+
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function () {
+    console.log("connected to mongo")
+  });
   const newUser = {
     profile: {
       firstName: req.body.firstName,
@@ -28,18 +56,18 @@ router.post('/', async (req, res, next) => {
       }
     }
   };
-  
-  await oktaClient
-    .createUser(newUser)
-    .then(user => {
-      UserModel.create({user})
-      res.status(201);
-      res.send(user);
-    })
-    .catch(err => {
-      res.status(400);
-      res.send(err);
-    });
+
+
+  try {
+    const user = await oktaClient.createUser(newUser)
+    console.log(user)
+    await createMongoUser(res, user)
+    res.status(200).send( user )
+  }
+  catch (err) {
+    // console.log(err)
+    res.status(400).send(err);
+  }
 });
 
 module.exports = router;

@@ -1,57 +1,50 @@
 // src/Home.js
 
-import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { withAuth } from '@okta/okta-react';
+import React, { useState, useEffect } from 'react'
+import { Redirect } from 'react-router-dom'
+import fetch from 'isomorphic-fetch'
 import Feed from './Feed'
 import TweetBox from './TweetBox'
 import Container from '@material-ui/core/Container'
 
-
-export default withAuth(class HomePage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { authenticated: null };
-    this.checkAuthentication = this.checkAuthentication.bind(this);
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
-  }
-
-  async checkAuthentication() {
-    const authenticated = await this.props.auth.isAuthenticated();
-    if (authenticated !== this.state.authenticated) {
-      this.setState({ authenticated });
+export default function HomePage (props) {
+  const [authenticated, setAuthenticated] = useState(null)
+  const [userDataError, setUserDataError] = useState(null)
+  useEffect(() => {
+    async function checkAuthentication() {
+      const auth = await props.auth.isAuthenticated()
+      if (auth !== authenticated) {
+        setAuthenticated(auth)
+      }
     }
-  }
-
-  async componentDidMount() {
-    this.checkAuthentication();
-  }
-
-  async componentDidUpdate() {
-    this.checkAuthentication();
-  }
-
-  async login() {
-    this.props.auth.login('/');
-  }
-
-  async logout() {
-    this.props.auth.logout('/');
-  }
-
-  render() {
-    if (this.state.authenticated === null) return null;
-
-    const button = this.state.authenticated ?
-      <button onClick={this.logout}><Link to='/'>Logout</Link><br /></button> :
-      <button onClick={this.login}><Link to='/login'>Login</Link><br /></button>;
-    return this.state.authenticated ? 
-     (
-      <Container m={1} maxWidth="sm">
-        <TweetBox />
-        <Feed />
-      </Container>      
-    ) : ( <Redirect to={{ pathname: '/login' }}/> );
-  }
-});
+    checkAuthentication()
+  })
+  useEffect(() => {
+    async function getUserData() {
+      const auth = await props.auth.getUser()
+      try {
+        const userData = await fetch('/user/' + auth.sub, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+        //dispatch redux action setting user data
+      }
+      catch(err) {
+        
+      }
+    }
+    getUserData()
+  })
+  
+  if (authenticated === null) return null;
+  if (authenticated) return      (
+    <Container m={1} maxWidth="sm">
+      <TweetBox auth={props.auth}/>
+      <Feed auth={props.auth}/>
+    </Container>      
+  )
+  else return (<Redirect to={{ pathname: '/login' }}/> )
+};

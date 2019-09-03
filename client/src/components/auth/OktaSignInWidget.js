@@ -2,9 +2,10 @@
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { withRouter } from 'react-router-dom'
 import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
-import { withRouter } from 'react-router-dom'
+
 
 export default withRouter(class OktaSignInWidget extends Component {
   componentDidMount() {
@@ -15,7 +16,9 @@ export default withRouter(class OktaSignInWidget extends Component {
         {
           title: 'Sign Up',
           className: 'btn-customAuth',
-          click: () => { this.props.history.push('/signup') },
+          click: () => {
+            this.props.history.push('/signup');
+          },
 
         }
       ],
@@ -29,6 +32,6 @@ export default withRouter(class OktaSignInWidget extends Component {
 
 
   render() {
-    return <div style={{ position: 'fixed', }} />
+    return <div style={{ overflow: 'auto', }} />
   }
 });

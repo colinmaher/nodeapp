@@ -8,11 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import OktaSignInWidget from "./OktaSignInWidget";
-import withAuth from '@okta/okta-react/dist/withAuth';
+// import withAuth from '@okta/okta-react/dist/withAuth';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: 'calc(100% - 5rem)',   
+    height: 'calc(100vh - 5rem)',
+    overflowY: 'auto',
   },
   image: {
     backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -34,18 +35,35 @@ const useStyles = makeStyles(theme => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
-    
+    height: '100%',
+    overflowY: 'auto',
+
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
 }));
 
-const SignInSide = withAuth((props) => {
+const SignInSide = (props) => {
   const classes = useStyles();
 
-  function onSuccess(res) {
+  async function onSuccess(res) {
+    console.log(res)
+
     if (res.status === 'SUCCESS') {
+      try {
+        await fetch('/getUserData/' + res.user.id, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        })
+      }
+      catch (err) {
+        console.log(err)
+      }
+
       return props.auth.redirect({
         sessionToken: res.session.token
       });
@@ -71,7 +89,7 @@ const SignInSide = withAuth((props) => {
             <OktaSignInWidget className={classes.form}
               baseUrl={props.baseUrl}
               onSuccess={onSuccess}
-              onError={onError}/>
+              onError={onError} />
           </div>
         </Grid>
       </Grid>
@@ -80,5 +98,5 @@ const SignInSide = withAuth((props) => {
 
 
   )
-});
+};
 export default SignInSide;

@@ -69,7 +69,7 @@ class RegistrationForm extends React.Component {
       },
       body: JSON.stringify(this.state)
     })
-      .then(user => {
+      .then(() => {
         this.oktaAuth
           .signIn({
             username: this.state.email,
@@ -79,7 +79,7 @@ class RegistrationForm extends React.Component {
             this.setState({
               sessionToken: res.sessionToken
             })
-          );
+          )
       })
       .catch(err => console.log);
   }

@@ -3,20 +3,24 @@ const router = app.Router();
 const mongoose = require('mongoose');
 const UserModel = require('../models/userModel').UserModel
 const TweetModel = require('../models/tweetModel').TweetModel
+const TagModel = require('../models/tagModel').TagModel
 
 async function parseTags(tweet) {
   const tokens = tweet.split(' ')
   const tags = [];
-  for (let i=0; i<tokens.length; ++i) {
-    console.log(token)
+  for (let i = 0; i < tokens.length; ++i) {
+    console.log(tokens[i])
     if (tokens[i][0] === '#') {
-      const tag = token.substring(1, token.length)
-      await UserModel.findOne({ displayName: tag }, function (err, doc) {
-        if (err) {
-          continue
-        }
-        tags.push({ tag: token, tagid: doc.id || null })
-      })
+      const tag = tokens[i].substring(1, tokens[i].length)
+      await TagModel.findOne({ tag: tag })
+        .then((doc) => {
+          tags.push({
+            tag: tokens[i], tagid: doc.id || null
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
   console.log(tags)
@@ -26,17 +30,17 @@ async function parseTags(tweet) {
 async function parseMentions(tweet) {
   const tokens = tweet.split(' ')
   const mentions = [];
-  for (token in tokens) {
-    if (token[0] === '@') {
-      const mention = token.substring(1, token.length)
+  for (let i = 0; i < tokens.length; ++i) {
+    if (tokens[i][0] === '@') {
+      const mention = tokens[i].substring(1)
       console.log(mention)
-      await UserModel.findOne({ displayName: mention }, function (err, doc) {
-        if (err) {
-          continue
-        }
-        mentions.push({ mention: token, uid: doc.id })
-      })
-
+      await UserModel.findOne({ username: mention })
+        .then(() => {
+          mentions.push({ mention: tokens[i], uid: doc.id })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
   return mentions
@@ -54,25 +58,44 @@ async function postTweet(req, res) {
   if (!req.body) return res.sendStatus(400);
   const tweet = req.body.tweet;
   const info = req.body.userInfo;
+  console.log(info)
   if (info)
     if (tweet.length < 280 && tweet.length > 0) {
       const tags = await parseTags(tweet)
       const mentions = await parseMentions(tweet)
-      const processedTweet = { displayName: info.name, authorId: info.sub, text: tweet, tags: tags, mentions: mentions, }
+      const processedTweet = { username: info.name, oktaId: info.sub, text: tweet, tags: tags, mentions: mentions, }
       console.log(processedTweet)
-      await TweetModel.create(processedTweet);
-      return res.sendStatus(200);
+      await TweetModel.create(processedTweet)
+        .then(() => {
+          res.send(processedTweet).sendStatus(200);
+        })
+        .catch((err) => {
+          console.log(err)
+          res.status(400).send("Error posting tweeet")
+        });
     }
     else {
-      return res.status(400).send("Tweets must be fewer than 280 characters in length.")
+      res.status(400).send("Tweets must be fewer than 280 characters in length.")
     }
-  else return res.status(400).send("Authentication error please sign in.")
+  else res.status(400).send("Authentication error please sign in.")
 }
 
-router.post('/', async (req, res, next) => {
+async function updateLike(req) {
+
+}
+
+router.post('/updateLike', async (req, res) => {
+  await updateLike(req).catch((err) => {
+    console.log(err)
+    res.status(400)
+      .send("Error updating like")
+  })
+})
+
+router.post('/', async (req, res) => {
   console.log(req.body);
   console.log(req.session);
-  postTweet(req, res).catch(err => {
+  await postTweet(req, res).catch(err => {
     console.log(err);
     return res.status(400).send("Error posting tweet");
   });
