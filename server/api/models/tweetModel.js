@@ -6,7 +6,7 @@ const tweetSchema = new mongoose.Schema({
     isRetweet: { type: Boolean, default: false },
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag', default: [] }],
     mentions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
-    liked: {type: Boolean, default: false},
+    liked: { type: Boolean, default: false },
     retweets: { type: Number, default: 0 },
     numLikes: { type: Number, default: 0 },
     whoLikes: [{ type: mongoose.Schema.Types.ObjectId, default: [] }],
