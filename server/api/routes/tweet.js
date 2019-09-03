@@ -13,7 +13,7 @@ async function parseTags(tweet) {
     if (tokens[i][0] === '#') {
       const tag = tokens[i].substring(1, tokens[i].length)
       await TagModel.findOne({ tag: tag })
-        .then(() => {
+        .then((doc) => {
           tags.push({
             tag: tokens[i], tagid: doc.id || null
           })

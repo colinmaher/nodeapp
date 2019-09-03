@@ -9,6 +9,7 @@ const session = require('express-session')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const errorHandler = require('errorhandler')
+const fetch = require('isomorphic-fetch')
 
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise
@@ -58,6 +59,12 @@ else {
   app.use(morgan('combined'))
   mongoose.connect(process.env.MONGO_HOST_URL, { useNewUrlParser: true })
 }
+
+app.use((req, res, next) => {
+  console.log(req.session)
+  console.log(req.sessionID)
+  next()
+})
 
 app.get("/health", function (req, res) {
   res.status(200).send()

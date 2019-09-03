@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const tagSchema = new mongoose.Schema({
     tag: String,
     initialAuthor: String,
+    tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag', default: [] }],
     mentions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },

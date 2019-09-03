@@ -6,7 +6,7 @@ import config from './app.config';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Security } from '@okta/okta-react';
 import * as serviceWorker from './serviceWorker';
-import configureStore from "./modules/store";
+import configureStore from "./store";
 import { Provider as ReduxProvider } from "react-redux";
 
 function onAuthRequired({ history }) {
