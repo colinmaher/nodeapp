@@ -1,13 +1,13 @@
-import ACTIONS from "./actions";
+import ACTIONS from "../actions/actions";
 import _ from "lodash";
 
 const defaultState = {
     items: []
 };
 
-const todoReducer = (state = defaultState, action) => {
+const authReducer = (state = defaultState, action) => {
     switch (action.type) {
-        case ACTIONS.Types.CREATE_ITEM: {
+        case ACTIONS.Types.SET_USER: {
             console.log(action);
 
             let item = action.payload;
@@ -29,4 +29,4 @@ const todoReducer = (state = defaultState, action) => {
     }
 };
 
-export default todoReducer;
+export default authReducer;
