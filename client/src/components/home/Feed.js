@@ -15,7 +15,7 @@ export default function Feed(props) {
 
   // const dispatch = useDispatch()
   const userData = useSelector(state => {
-    console.log(state)
+    // console.log(state)
     return state.userData
   });
 

@@ -40,7 +40,7 @@ function HomePage(props) {
             'Content-Type': 'application/json'
           }
         })
-        console.log(newUserData)
+        // console.log(newUserData)
         return newUserData.json()
       }
       catch (err) {
@@ -53,12 +53,11 @@ function HomePage(props) {
     const data = await getUserData()
 
     if (data !== undefined) {
-      console.log(data)
+      // console.log(data)
       dispatch(ACTIONS.setUserData(data))
     }
 
   }
-  fetchAndUpdate()
 
   useEffect(() => {
     fetchAndUpdate()

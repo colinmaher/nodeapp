@@ -96,17 +96,7 @@ async function postTweet(tweetObj) {
     throw Error(err)
   }
 }
-async function deleteTweet(oktaId, id) {
-  try {
-    const userDoc = UserModel.find({ oktaId: oktaId })
-    userDoc.tweets.remove({ _id: id })
-    userDoc.save()
-    return userDoc
-  }
-  catch (err) {
-    throw Error(err)
-  }
-}
+
 
 async function validateTweet(tweet, id) {
   if (tweet && tweet.length > 0 && tweet.length <= 280 && id !== undefined) {
@@ -132,12 +122,23 @@ router.post('/:oktaId/tweet', async (req, res) => {
   }
 })
 
+async function deleteTweet(oktaId, id) {
+  try {
+    const userDoc = await UserModel.findOne({ oktaId: oktaId })
+    userDoc.tweets.pull({ _id: id })
+    userDoc.save()
+    res.status(200)
+  }
+  catch (err) {
+    throw Error(err)
+  }
+}
+
 router.post('/:oktaId/delete/:tweetId', async (req, res) => {
   if (!req.params.oktaId || !req.body || !req.params.tweetId) return res.sendStatus(400);
   try {
-    const userDoc = await deleteTweet(req.params.oktaId, req.params.tweetId)
-    
-    res.status(200).send(userDoc)
+    await deleteTweet(req.params.oktaId, req.params.tweetId)
+    res.status(200)
   }
   catch (err) {
     console.log(err)

@@ -6,29 +6,30 @@ const defaultState = {
 }
 
 const reducer = (state = defaultState, action) => {
+    console.log(action)
+    console.log(action.payload)
     switch (action.type) {
         case ACTIONS.Types.SET_USER_DATA: {
-            console.log(action)
             const data = action.payload
-            console.log(data)
             let newState = _.cloneDeep(state)
             newState.userData = data
             return newState
         }
         case ACTIONS.Types.TWEET: {
-            console.log(action)
             const data = action.payload
-            console.log(data)
             let newState = _.cloneDeep(state)
             newState.userData.tweets.push(data)
             return newState
         }
         case ACTIONS.Types.DELETE_TWEET: {
-            console.log(action)
-            const data = action.payload
-            console.log(data)
+            const id = action.payload
             let newState = _.cloneDeep(state)
-            newState.userData.tweets = data
+            console.log(newState.tweets)
+            newState.userData.tweets = 
+            newState.userData.tweets.filter((tweet) => {
+                return tweet._id !== id
+            })
+            console.log(newState.tweets)
             return newState
         }
         default:

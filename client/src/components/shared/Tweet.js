@@ -45,19 +45,20 @@ export default function Tweet(props) {
 
   async function deleteTweet() {
     console.log(props.tweet._id)
-    fetch("/user/" + id + "/delete/" + props.tweet._id, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      const newData = res.json()
-      console.log(newData)
-      dispatch(ACTIONS.deleteTweet(newData.tweets))
-    }).catch(err => {
-      throw Error(err)
-    })
+    try {
+      await fetch("/user/" + id + "/delete/" + props.tweet._id, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+
+      dispatch(ACTIONS.deleteTweet(props.tweet._id))
+    }
+    catch (err) {
+      throw Error()
+    }
   }
 
   return (

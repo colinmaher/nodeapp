@@ -5,6 +5,7 @@ const Types = {
     DELETE_TWEET: "DELETE_TWEET",
 };
 // actions
+// narrow down to reduce network load
 const setUserData = userData => ({
     type: Types.SET_USER_DATA,
     payload: userData
@@ -15,16 +16,10 @@ const tweet = tweet => ({
     payload: tweet
 })
 
-const deleteTweet = newTweets => ({
+const deleteTweet = id => ({
     type: Types.DELETE_TWEET,
-    payload: newTweets
+    payload: id
 })
-
-// const deleteItem = id => ({
-//     type: Types.DELETE_ITEM,
-//     payload: id
-// });
-
 
 export default {
     setUserData,
