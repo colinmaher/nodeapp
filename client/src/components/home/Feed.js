@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import ACTIONS from "../../actions/actions";
 // import fetch from 'isomorphic-fetch'
 import Tweet from '../shared/Tweet'
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button'
+
 
 export default function Feed(props) {
   // const classes = useStyles();
@@ -11,6 +13,7 @@ export default function Feed(props) {
   const [feedSuccess, setFeedSuccess] = useState(true);
   const [feed, setFeed] = useState([]);
 
+  // const dispatch = useDispatch()
   const userData = useSelector(state => {
     console.log(state)
     return state.userData
@@ -18,24 +21,18 @@ export default function Feed(props) {
 
   async function waitForTweets() {
     setLoading(true)
-    try {
-      if (userData.tweets !== undefined) {
-        setFeed(userData.tweets)
-      }
-      console.log(userData)
+    if (userData.tweets !== undefined) {
+      setFeed(userData.tweets)
       setFeedSuccess(true)
-    }
-    catch (err) {
-      setFeedSuccess(false)
     }
     setLoading(false)
   }
 
   // const dispatch = useDispatch()
   useEffect(() => {
-    
     waitForTweets()
-  }, [userData.tweets, loading])
+  }, [userData.tweets])
+
   let feedComponent
   if (!loading) {
     if (feedSuccess) {
@@ -50,8 +47,15 @@ export default function Feed(props) {
   }
   return (
     <>
-      <Button onClick={() => { setLoading(true) }}>Refresh</Button>
-      { feedComponent }
+      <Button onClick={() => {
+        setLoading(true)
+        try {
+          props.fetchAndUpdate()
+        } catch (err) {
+          setFeedSuccess(false)
+        }
+      }}>Refresh</Button>
+      {feedComponent}
     </>
   )
 }

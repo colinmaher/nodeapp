@@ -25,7 +25,7 @@ router.get('/:oktaId', async (req, res) => {
   if (!req.params.oktaId) return res.sendStatus(400);
   try {
     const userData = await getUser(res, req.params.oktaId)
-    console.log(userData)
+    // console.log(userData)
     res.status(200).send(userData)
   }
   catch (err) {
