@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const tweetSchema = new mongoose.Schema({
-    authorId: { type: mongoose.Schema.Types.ObjectId, default: null }, // change later
     authorOktaId: String,
+    username: String,
     text: String,
     isRetweet: { type: Boolean, default: false },
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag', default: [] }],

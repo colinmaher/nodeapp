@@ -1,13 +1,24 @@
 // types of action
 const Types = {
     SET_USER_DATA: "SET_USER_DATA",
-    // DELETE_ITEM: "DELETE_ITEM",
+    TWEET: "TWEET",
+    DELETE_TWEET: "DELETE_TWEET",
 };
 // actions
 const setUserData = userData => ({
-    type: Types.CREATE_ITEM,
-    userData: userData
+    type: Types.SET_USER_DATA,
+    payload: userData
 });
+
+const tweet = tweet => ({
+    type: Types.TWEET,
+    payload: tweet
+})
+
+const deleteTweet = newTweets => ({
+    type: Types.DELETE_TWEET,
+    payload: newTweets
+})
 
 // const deleteItem = id => ({
 //     type: Types.DELETE_ITEM,
@@ -17,6 +28,7 @@ const setUserData = userData => ({
 
 export default {
     setUserData,
-    // deleteItem,
+    tweet,
+    deleteTweet,
     Types
-};
+}

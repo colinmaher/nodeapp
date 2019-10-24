@@ -6,7 +6,7 @@ const UserModel = require('../models/userModel').UserModel
 
 async function createMongoUser(res, user) {
   const db = mongoose.connection;
-  console.log(user)
+  // console.log(user)
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function () {
     console.log("connected to mongo")
@@ -20,7 +20,7 @@ async function createMongoUser(res, user) {
       username: user.profile.login,
       email: user.profile.email
     }
-    console.log(processedUser)
+    // console.log(processedUser)
     try {
       await UserModel.create(processedUser)
     }
@@ -35,8 +35,8 @@ async function createMongoUser(res, user) {
 
 /* Create a new User (register). */
 router.post('/', async (req, res) => {
-  console.log(req.body)
-  if (!req.body) return res.sendStatus(400);
+  // console.log(req.body)
+  // if (req.body === undefined) return res.sendStatus(400);
   const db = mongoose.connection;
 
   db.on('error', console.error.bind(console, 'connection error:'));
@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
 
   try {
     const user = await oktaClient.createUser(newUser)
-    console.log(user)
+    // console.log(user)
     await createMongoUser(res, user)
     res.status(200).send( user )
   }

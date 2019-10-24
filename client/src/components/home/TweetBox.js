@@ -1,16 +1,19 @@
 import React from 'react'
+import { connect } from "react-redux";
 import fetch from 'isomorphic-fetch'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import ACTIONS from "../../actions/actions";
 
-export default class TweetBox extends React.Component {
+class TweetBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       tweet: '',
       validTweet: false,
       tweetSuccess: null,
+      validatedTweet: null,
     }
     this.handleTweetChange = this.handleTweetChange.bind(this)
     this.handleTweetSubmit = this.handleTweetSubmit.bind(this)
@@ -38,27 +41,36 @@ export default class TweetBox extends React.Component {
     const payload = {
       tweet: this.state.tweet,
     }
-    try {
-      await fetch('/user/' + oktaUser.sub + '/tweet', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
+
+    fetch('/user/' + oktaUser.sub + '/tweet', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }).then(res => {
+      console.log(res)
+      return res.json()
+    }).then(res => {
+      console.log(res)
+      this.props.tweet(ACTIONS.tweet(res))
+    }).then(() => {
       this.setState({
         tweetSuccess: true,
         tweet: '',
         validTweet: false,
       })
-    }
-    catch (err) {
+    }).catch(err => {
+      
       this.setState({
         tweetSuccess: false,
-        errorMsg: err
+        errorMsg: 'Tweet failed to post. Please try again.\n'
       })
-    }
+      // change later
+      throw Error(err)
+    })
+
   }
 
 
@@ -91,3 +103,13 @@ export default class TweetBox extends React.Component {
     )
   }
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // dispatching plain actions
+    tweet: (action) => dispatch(action),
+  }
+}
+export default connect(
+  null,
+  mapDispatchToProps
+)(TweetBox)
