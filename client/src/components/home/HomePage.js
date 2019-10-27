@@ -67,7 +67,7 @@ function HomePage(props) {
   if (authenticated) return (
     <Container m={1} maxWidth="sm">
       <TweetBox auth={props.auth} />
-      <Feed auth={props.auth} fetchAndUpdate={fetchAndUpdate} />
+      <Feed fetchAndUpdate={fetchAndUpdate} />
     </Container>
   )
   else return (<Redirect to={{ pathname: '/login' }} />)

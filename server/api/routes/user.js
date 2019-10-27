@@ -86,8 +86,6 @@ async function postTweet(tweetObj) {
     // add tweet to mongo here
     const doc = await UserModel.findOne({ oktaId: tweetObj.authorOktaId })
     const tweet = await TweetModel.create(tweetObj)
-    await addTagsToTweet(tweet)
-    await addMentionsToTweet(tweet)
     doc.tweets.push(tweet)
     doc.save()
     return tweet
@@ -104,6 +102,8 @@ async function validateTweet(tweet, id) {
       text: tweet,
       authorOktaId: id
     }
+    // await addTagsToTweet(tweetObj)
+    // await addMentionsToTweet(tweetObj)
     return tweetObj
   }
   else throw Error("Invalid tweet")
@@ -127,7 +127,6 @@ async function deleteTweet(oktaId, id) {
     const userDoc = await UserModel.findOne({ oktaId: oktaId })
     userDoc.tweets.pull({ _id: id })
     userDoc.save()
-    res.status(200)
   }
   catch (err) {
     throw Error(err)
@@ -138,6 +137,30 @@ router.post('/:oktaId/delete/:tweetId', async (req, res) => {
   if (!req.params.oktaId || !req.body || !req.params.tweetId) return res.sendStatus(400);
   try {
     await deleteTweet(req.params.oktaId, req.params.tweetId)
+    res.status(200)
+  }
+  catch (err) {
+    console.log(err)
+    res.send("Error: Tweets can only be 1 to 280 characters in length").status(400)
+  }
+})
+
+async function editTweet(oktaId, id, newTweet) {
+  try {
+    const validatedTweet = await validateTweet(newTweet)
+    const userDoc = await UserModel.findOneAndUpdate({ oktaId: oktaId })
+    userDoc.tweets.updateOne({ _id: id }, validatedTweet)
+    userDoc.save()
+  }
+  catch (err) {
+    throw Error(err)
+  }
+}
+
+router.post('/:oktaId/edit/:tweetId', async (req, res) => {
+  if (!req.params.oktaId || !req.body || !req.body.tweet || !req.params.tweetId) return res.sendStatus(400);
+  try {
+    await editTweet(req.params.oktaId, req.params.tweetId, req.body.tweet)
     res.status(200)
   }
   catch (err) {

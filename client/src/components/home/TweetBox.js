@@ -10,7 +10,7 @@ class TweetBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      tweet: '',
+      tweet: this.props.tweet || '',
       validTweet: false,
       tweetSuccess: null,
       validatedTweet: null,
@@ -68,7 +68,7 @@ class TweetBox extends React.Component {
         errorMsg: 'Tweet failed to post. Please try again.\n'
       })
       // change later
-      throw Error(err)
+      // throw Error(err)
     })
 
   }

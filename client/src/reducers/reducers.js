@@ -24,12 +24,10 @@ const reducer = (state = defaultState, action) => {
         case ACTIONS.Types.DELETE_TWEET: {
             const id = action.payload
             let newState = _.cloneDeep(state)
-            console.log(newState.tweets)
             newState.userData.tweets = 
             newState.userData.tweets.filter((tweet) => {
                 return tweet._id !== id
             })
-            console.log(newState.tweets)
             return newState
         }
         default:

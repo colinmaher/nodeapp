@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import ACTIONS from "../../actions/actions";
 // import fetch from 'isomorphic-fetch'
-import Tweet from '../shared/Tweet'
+import Tweet from './Tweet'
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button'
 

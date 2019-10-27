@@ -25,8 +25,8 @@
     "build:server": "cd server && npm run build",
     "build:client": "cd client && npm run build",
     "update": "run-p update:server update:client",
-    "update:server": "cd server && npm run update",
-    "update:client": "cd client && npm run update"
+    "update:server": "cd server && npm update",
+    "update:client": "cd client && npm update"
   },
   "devDependencies": {
     "concurrently": "^4.1.2",
