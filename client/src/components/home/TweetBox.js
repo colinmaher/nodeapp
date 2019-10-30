@@ -5,8 +5,10 @@ import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ACTIONS from "../../actions/actions";
+import AuthContext from '../../contexts/AuthContext'
 
 class TweetBox extends React.Component {
+  static contextType = AuthContext
   constructor(props) {
     super(props)
     this.state = {
@@ -15,6 +17,7 @@ class TweetBox extends React.Component {
       tweetSuccess: null,
       validatedTweet: null,
     }
+    
     this.handleTweetChange = this.handleTweetChange.bind(this)
     this.handleTweetSubmit = this.handleTweetSubmit.bind(this)
   }
@@ -37,12 +40,12 @@ class TweetBox extends React.Component {
 
   async handleTweetSubmit(e) {
     e.preventDefault();
-    const oktaUser = await this.props.auth.getUser();
+    const oktaUser = await this.context;
     const payload = {
       tweet: this.state.tweet,
     }
 
-    fetch('/user/' + oktaUser.sub + '/tweet', {
+    await fetch('/user/' + oktaUser.sub + '/tweet', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -78,7 +81,7 @@ class TweetBox extends React.Component {
     const tweetError = this.state.tweetSuccess ? <></> : <span>{this.state.errorMsg}</span>
     return (
       <Box m={1} >
-        <form autoComplete="off" onSubmit={this.handleTweetSubmit}>
+        <form autoComplete="off" onSubmit={this.props.editing ? this.handleEditTweet : this.handleTweetSubmit}>
           <TextField
             id="outlined-dense-multiline"
             type="text"

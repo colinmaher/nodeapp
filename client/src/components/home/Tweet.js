@@ -96,7 +96,7 @@ export default function Tweet(props) {
         </Typography>
         <Button color="primary" className={classes.btn} onClick={() => deleteTweet()}><DeleteIcon /></Button>
         <Button color="primary" className={classes.btn} onClick={() => setEditBoxOpen(!editBoxOpen)}><EditIcon /></Button>
-        { editBoxOpen ? <TweetBox tweet={tweet}/> : null }  
+        { editBoxOpen ? <TweetBox tweet={tweet} editing={true}/> : null }  
       </span>
 
       {/* {

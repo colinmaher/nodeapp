@@ -1,18 +1,19 @@
 // src/Home.js
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
 import ACTIONS from "../../actions/actions";
 import fetch from 'isomorphic-fetch'
 import Feed from './Feed'
 import TweetBox from './TweetBox'
+import AuthContext from '../../contexts/AuthContext'
 import Container from '@material-ui/core/Container'
 
 function HomePage(props) {
   const [authenticated, setAuthenticated] = useState(null)
   const [userDataError, setUserDataError] = useState(null)
-
+  const auth = useContext(AuthContext)
 
   const dispatch = useDispatch()
   // const userData = useSelector(state => {
@@ -20,9 +21,9 @@ function HomePage(props) {
   // });
 
   async function checkAuthentication() {
-    const auth = await props.auth.isAuthenticated()
-    if (auth !== authenticated) {
-      setAuthenticated(auth)
+    const isAuthenticated = await auth.isAuthenticated()
+    if (isAuthenticated !== authenticated) {
+      setAuthenticated(isAuthenticated)
     }
   }
   useEffect(() => {
@@ -30,10 +31,10 @@ function HomePage(props) {
   })
 
   async function getUserData() {
-    const auth = await props.auth.getUser()
-    if (auth) {
+    const user = await auth.getUser()
+    if (user) {
       try {
-        const newUserData = await fetch('/user/' + auth.sub, {
+        const newUserData = await fetch('/user/' + user.sub, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -56,7 +57,6 @@ function HomePage(props) {
       // console.log(data)
       dispatch(ACTIONS.setUserData(data))
     }
-
   }
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function HomePage(props) {
   if (authenticated === null) return null;
   if (authenticated) return (
     <Container m={1} maxWidth="sm">
-      <TweetBox auth={props.auth} />
+      <TweetBox/>
       <Feed fetchAndUpdate={fetchAndUpdate} />
     </Container>
   )
