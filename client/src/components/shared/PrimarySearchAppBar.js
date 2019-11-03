@@ -17,7 +17,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import PersistentDrawerLeft from './PersistentDrawerLeft';
 
 import { Link } from 'react-router-dom';
-import MenuOptions from '../home/MenuOptions'
+import MenuOptions from './MenuOptions'
 
 const useStyles = makeStyles(theme => ({
     grow: {

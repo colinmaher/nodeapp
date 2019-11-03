@@ -1,40 +1,43 @@
 import React from 'react';
 import { MenuItem } from '@material-ui/core'
-import { Link } from 'react-router-dom';
-import { withAuth } from '@okta/okta-react';
+import { Link } from 'react-router-dom'
+import AuthContext from '../../contexts/AuthContext'
+// import { withAuth } from '@okta/okta-react';
 
-export default withAuth(class MenuOptions extends React.Component {
+export default class MenuOptions extends React.Component {
+    static contextType = AuthContext
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             authenticated: null,
         };
-        this.checkAuthentication = this.checkAuthentication.bind(this);
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
+        this.checkAuthentication = this.checkAuthentication.bind(this)
+        this.login = this.login.bind(this)
+        this.logout = this.logout.bind(this)
+        
     }
 
     async checkAuthentication() {
-        const authenticated = await this.props.auth.isAuthenticated();
+        const authenticated = await this.context.isAuthenticated();
         if (authenticated !== this.state.authenticated) {
-            this.setState({ authenticated });
+            this.setState({ authenticated })
         }
     }
 
     async componentDidMount() {
-        this.checkAuthentication();
+        this.checkAuthentication()
     }
 
     async componentDidUpdate() {
-        this.checkAuthentication();
+        this.checkAuthentication()
     }
 
     async login() {
-        this.props.auth.login('/');
+        this.context.login('/')
     }
 
     async logout() {
-        this.props.auth.logout('/');
+        this.context.logout('/')
     }
 
     render() {
@@ -42,7 +45,7 @@ export default withAuth(class MenuOptions extends React.Component {
             <>
                 <Link to="/profile"><MenuItem >Profile</MenuItem></Link>
                 <Link to="/"><MenuItem onClick={() => {
-                    this.props.auth.logout();
+                    this.context.logout()
                 }}>Logout</MenuItem></Link>
             </>
         ) : (
@@ -50,9 +53,9 @@ export default withAuth(class MenuOptions extends React.Component {
                     <Link to="/login"><MenuItem>Login</MenuItem></Link>
                     <Link to="/signup"><MenuItem>Create Account</MenuItem></Link>
                 </>
-            );
+            )
         return (
             menuOptions
         )
     }
-});
+}

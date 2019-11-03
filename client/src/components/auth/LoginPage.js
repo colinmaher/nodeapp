@@ -1,53 +1,35 @@
 
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react'
+import { Redirect } from 'react-router-dom'
 // import { withAuth } from '@okta/okta-react';
-import SignInSide from './SignInSide';
+import SignInSide from './SignInSide'
+import AuthContext from '../../contexts/AuthContext'
 
-export default class LoginPage extends Component {
-    constructor(props) {
-        super(props);
-        this.onSuccess = this.onSuccess.bind(this);
-        this.onError = this.onError.bind(this);
-        this.state = {
-            authenticated: null
-        };
-        this.checkAuthentication();
-    }
-
-    async checkAuthentication() {
-        const authenticated = await this.props.auth.isAuthenticated();
-        if (authenticated !== this.state.authenticated) {
-            this.setState({ authenticated });
-        }
-    }
-
-    componentDidUpdate() {
-        this.checkAuthentication();
-    }
-
-    onSuccess(res) {
-        if (res.status === 'SUCCESS') {
-            console.log(res.session)
-            return this.props.auth.redirect({
-                sessionToken: res.session.token
-            });
-        } else {
-            // The user can be in another authentication state that requires further action.
-            // For more information about these states, see:
-            //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
-        }
-    }
-
-    onError(err) {
-        console.log('error logging in', err);
-    }
- 
-    render() {
+export default function LoginPage(props) {
+    const [authenticated, setAuthenticated] = useState(null)
+    const auth = useContext(AuthContext)
+    async function checkAuthentication() {
         
-        if (this.state.authenticated === null) return null;
-        return this.state.authenticated ?
-            <Redirect to={{ pathname: '/profile' }} /> :
-            <SignInSide baseUrl={this.props.baseUrl} auth={this.props.auth}/>
+        const isAuth = await auth.isAuthenticated()
+        if (isAuth !== authenticated) {
+            setAuthenticated(isAuth)
+        }
     }
-};
+
+    useEffect(() => {
+        checkAuthentication();
+    })
+
+    if (authenticated === null) { return null }
+    else if (authenticated) {
+        return <Redirect to={{ pathname: '/' }} />
+    }
+    else {
+        return <SignInSide baseUrl={props.baseUrl} />
+    }
+
+
+
+
+
+}

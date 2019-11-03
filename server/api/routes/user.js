@@ -96,14 +96,14 @@ async function postTweet(tweetObj) {
 }
 
 
-async function validateTweet(tweet, id) {
-  if (tweet && tweet.length > 0 && tweet.length <= 280 && id !== undefined) {
+async function validateTweet(tweet, oktaId) {
+  if (tweet && tweet.length > 0 && tweet.length <= 280) {
     const tweetObj = {
       text: tweet,
-      authorOktaId: id
     }
     // await addTagsToTweet(tweetObj)
     // await addMentionsToTweet(tweetObj)
+    tweetObj.authorOktaId = oktaId
     return tweetObj
   }
   else throw Error("Invalid tweet")
@@ -112,7 +112,7 @@ async function validateTweet(tweet, id) {
 router.post('/:oktaId/tweet', async (req, res) => {
   if (!req.params.oktaId || !req.body) return res.sendStatus(400);
   try {
-    const tweetObj = await validateTweet(req.body.tweet, req.params.oktaId)
+    const tweetObj = await validateTweet(req.body.tweet)
     const tweet = await postTweet(tweetObj)
     res.status(200).send(tweet)
   }
@@ -147,10 +147,27 @@ router.post('/:oktaId/delete/:tweetId', async (req, res) => {
 
 async function editTweet(oktaId, id, newTweet) {
   try {
-    const validatedTweet = await validateTweet(newTweet)
-    const userDoc = await UserModel.findOneAndUpdate({ oktaId: oktaId })
-    userDoc.tweets.updateOne({ _id: id }, validatedTweet)
-    userDoc.save()
+    const validatedTweet = await validateTweet(newTweet, oktaId)
+    let i = 0
+    let updatedTweet
+    console.log("validatedTweet:")
+    console.log(validatedTweet.text)
+    const userDoc = await UserModel.findOne({ oktaId: oktaId }, async (err, doc) => {
+      for (; i < doc.tweets.length; ++i) {
+        console.log(doc.tweets[i])
+        console.log(id)
+        if (doc.tweets[i]._id == id) {
+          doc.tweets[i].text = validatedTweet.text
+          // add tags and mentions later here
+          
+          console.log(doc.tweets[i])
+          doc.save()
+          updatedTweet = doc.tweets[i]
+          break
+        }
+      }
+    })
+    return updatedTweet
   }
   catch (err) {
     throw Error(err)
@@ -158,10 +175,11 @@ async function editTweet(oktaId, id, newTweet) {
 }
 
 router.post('/:oktaId/edit/:tweetId', async (req, res) => {
-  if (!req.params.oktaId || !req.body || !req.body.tweet || !req.params.tweetId) return res.sendStatus(400);
+  if (!req.params.oktaId || !req.body || !req.body.tweetText || !req.params.tweetId) return res.sendStatus(400);
   try {
-    await editTweet(req.params.oktaId, req.params.tweetId, req.body.tweet)
-    res.status(200)
+    const tweet = await editTweet(req.params.oktaId, req.params.tweetId, req.body.tweetText)
+    console.log(tweet)
+    res.status(200).send(tweet)
   }
   catch (err) {
     console.log(err)

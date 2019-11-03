@@ -2,12 +2,14 @@ import ACTIONS from "../actions/actions"
 import _ from "lodash"
 
 const defaultState = {
-    userData: {}
+    userData: {
+        tweets: []
+    },
 }
 
 const reducer = (state = defaultState, action) => {
     console.log(action)
-    console.log(action.payload)
+    // console.log(action.payload)
     switch (action.type) {
         case ACTIONS.Types.SET_USER_DATA: {
             const data = action.payload
@@ -27,6 +29,20 @@ const reducer = (state = defaultState, action) => {
             newState.userData.tweets = 
             newState.userData.tweets.filter((tweet) => {
                 return tweet._id !== id
+            })
+            return newState
+        }
+        case ACTIONS.Types.EDIT_TWEET: {
+            const tweet = action.payload.tweet
+            let newState = _.cloneDeep(state)
+            newState.userData.tweets = 
+            newState.userData.tweets.map((t) => {
+                console.log(t)
+                if (t._id === tweet._id) {
+                    console.log(tweet)
+                    return tweet
+                }
+                return t
             })
             return newState
         }

@@ -28,10 +28,9 @@ export default function Feed(props) {
     setLoading(false)
   }
 
-  // const dispatch = useDispatch()
   useEffect(() => {
     waitForTweets()
-  }, [userData.tweets])
+  }, [userData.tweets, waitForTweets])
 
   let feedComponent
   if (!loading) {

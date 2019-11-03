@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import ACTIONS from "../../actions/actions";
 import TweetBox from './TweetBox'
-
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import AuthContext from '../../contexts/AuthContext'
+import ApiContext from '../../contexts/ApiContext'
+import { async } from 'q';
 
 
 
@@ -28,75 +30,34 @@ const useStyles = makeStyles({
 
 export default function Tweet(props) {
   const classes = useStyles();
-  const [like, setLike] = React.useState(null);
+  // const [like, setLike] = React.useState(null);
   const [editBoxOpen, setEditBoxOpen] = React.useState(false);
-  // console.log(props.tweet.text)
-  const tweet = props.tweet.text
+  const [deleteError, setDeleteError] = React.useState(null)
+  const tweet = props.tweet
   const dispatch = useDispatch()
-  const id = useSelector(state => state.userData.oktaId)
-  // console.log(id)
+  const auth = useContext(AuthContext)
+  const api = useContext(ApiContext)
 
-  // console.log(typeof tweet)
-  async function updateLike(val) {
-    setLike(val)
-    fetch("/tweet/updateLike", {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ val })
-    })
-  }
-
-  async function deleteTweet() {
-    console.log(props.tweet._id)
+  async function handleDeleteTweet() {
     try {
-      await fetch("/user/" + id + "/delete/" + props.tweet._id, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-
-      dispatch(ACTIONS.deleteTweet(props.tweet._id))
+      await api.deleteTweet(auth, tweet)
+      dispatch(ACTIONS.deleteTweet(tweet._id))
+      setDeleteError(false)
     }
-    catch (err) {
-      throw Error()
+    catch (e) {
+      setDeleteError(true)
     }
   }
-
-  async function editTweet() {
-    console.log(props.tweet._id)
-    try {
-      await fetch("/user/" + id + "/edit/" + props.tweet._id, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: {
-          tweet: ""
-        }
-      })
-
-      dispatch(ACTIONS.editTweet(props.tweet._id))
-    }
-    catch (err) {
-      throw Error()
-    }
-  }
-
   return (
     <Box >
       <span className={classes.root}>
         <Typography variant="body1" className={classes.tweet} gutterBottom>
-          {tweet}
+          {tweet.text}
         </Typography>
-        <Button color="primary" className={classes.btn} onClick={() => deleteTweet()}><DeleteIcon /></Button>
+        <Button color="primary" className={classes.btn} onClick={handleDeleteTweet}><DeleteIcon /></Button>
         <Button color="primary" className={classes.btn} onClick={() => setEditBoxOpen(!editBoxOpen)}><EditIcon /></Button>
-        { editBoxOpen ? <TweetBox tweet={tweet} editing={true}/> : null }  
+        { deleteError ? "Error deleting tweet." : null }
+        { editBoxOpen ? <TweetBox tweetText={tweet.text} id={tweet._id} editing={true}/> : null }  
       </span>
 
       {/* {

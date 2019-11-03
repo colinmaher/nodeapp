@@ -1,118 +1,90 @@
-import React from 'react'
-import { connect } from "react-redux";
-import fetch from 'isomorphic-fetch'
+import React, { useState, useContext, useEffect } from 'react'
+import { useDispatch, useSelector } from "react-redux";
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ACTIONS from "../../actions/actions";
 import AuthContext from '../../contexts/AuthContext'
+import ApiContext from '../../contexts/ApiContext'
 
-class TweetBox extends React.Component {
-  static contextType = AuthContext
-  constructor(props) {
-    super(props)
-    this.state = {
-      tweet: this.props.tweet || '',
-      validTweet: false,
-      tweetSuccess: null,
-      validatedTweet: null,
-    }
-    
-    this.handleTweetChange = this.handleTweetChange.bind(this)
-    this.handleTweetSubmit = this.handleTweetSubmit.bind(this)
-  }
+export default function TweetBox(props) {
+  const auth = useContext(AuthContext)
+  const api = useContext(ApiContext)
+  const dispatch = useDispatch()
+  const editing = props.editing || false
+  const [validTweet, setValidTweet] = useState(false)
+  const [tweetText, setTweetText] = useState(props.tweetText || "")
+  const [tweetSuccess, setTweetSuccess] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
 
-  handleTweetChange(e) {
-    const tweet = e.target.value;
-    if (tweet.length > 280 || tweet.length === 0) {
-      this.setState({
-        validTweet: false,
-        tweet: tweet
-      })
+  function handleTweetChange(e) {
+    const tweetText = e.target.value;
+    if (tweetText.length > 280 || tweetText.length === 0) {
+      setTweetText(tweetText)
+      setValidTweet(false)
     }
     else {
-      this.setState({
-        validTweet: true,
-        tweet: tweet
-      })
+      setTweetText(tweetText)
+      setValidTweet(true)
     }
   }
 
-  async handleTweetSubmit(e) {
+  async function handleTweetSubmit(e) {
     e.preventDefault();
-    const oktaUser = await this.context;
-    const payload = {
-      tweet: this.state.tweet,
+    if (editing) {
+      try {
+        const tweet = await api.editTweet(auth, tweetText, props.id)
+        console.log(tweet)
+        dispatch(ACTIONS.editTweet(tweet))
+        setTweetSuccess(true)
+        setTweetText('')
+        setValidTweet(false)
+      }
+      catch (e) {
+        setTweetSuccess(false)
+        setErrorMsg('Tweet failed to post. Please try again.\n')
+      }
     }
-
-    await fetch('/user/' + oktaUser.sub + '/tweet', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    }).then(res => {
-      console.log(res)
-      return res.json()
-    }).then(res => {
-      console.log(res)
-      this.props.tweet(ACTIONS.tweet(res))
-    }).then(() => {
-      this.setState({
-        tweetSuccess: true,
-        tweet: '',
-        validTweet: false,
-      })
-    }).catch(err => {
-      
-      this.setState({
-        tweetSuccess: false,
-        errorMsg: 'Tweet failed to post. Please try again.\n'
-      })
-      // change later
-      // throw Error(err)
-    })
-
+    else {
+      try {
+        const tweet = await api.postTweet(auth, tweetText)
+        dispatch(ACTIONS.tweet(tweet))
+        setTweetSuccess(true)
+        setTweetText('')
+        setValidTweet(false)
+        
+      }
+      catch (e) {
+        setTweetSuccess(false)
+        setErrorMsg('Tweet failed to post. Please try again.\n')
+      }
+    }
   }
 
 
-  render() {
-    const tweetError = this.state.tweetSuccess ? <></> : <span>{this.state.errorMsg}</span>
-    return (
-      <Box m={1} >
-        <form autoComplete="off" onSubmit={this.props.editing ? this.handleEditTweet : this.handleTweetSubmit}>
-          <TextField
-            id="outlined-dense-multiline"
-            type="text"
-            ref="TweetBox"
-            margin="dense"
-            variant="outlined"
-            multiline
-            placeholder="What's on your mind?"
-            rowsMax="4"
-            value={this.state.tweet}
-            onChange={this.handleTweetChange}
-            style={{ 'width': '100%' }}
-          />
-          {tweetError}
-          {
-            this.state.validTweet ?
-              <Button type="submit" variant="contained" value="Tweet">Tweet</Button> :
-              <Button type="submit" variant="contained" disabled value="Tweet">Tweet</Button>
-          }
-        </form>
-      </Box>
-    )
-  }
+  const tweetError = tweetSuccess ? <></> : <span>{errorMsg}</span>
+  return (
+    <Box m={1} >
+      <form autoComplete="off" onSubmit={handleTweetSubmit}>
+        <TextField
+          id="outlined-dense-multiline"
+          type="text"
+          margin="dense"
+          variant="outlined"
+          multiline
+          placeholder="What's on your mind?"
+          rowsMax="4"
+          value={tweetText}
+          onChange={handleTweetChange}
+          style={{ 'width': '100%' }}
+        />
+        {tweetError}
+        {
+          validTweet ?
+            <Button type="submit" variant="contained" value="Tweet">Tweet</Button> :
+            <Button type="submit" variant="contained" disabled value="Tweet">Tweet</Button>
+        }
+      </form>
+    </Box>
+  )
 }
-const mapDispatchToProps = (dispatch) => {
-  return {
-    // dispatching plain actions
-    tweet: (action) => dispatch(action),
-  }
-}
-export default connect(
-  null,
-  mapDispatchToProps
-)(TweetBox)

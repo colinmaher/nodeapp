@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import OktaSignInWidget from "./OktaSignInWidget";
+import AuthContext from '../../contexts/AuthContext'
 // import withAuth from '@okta/okta-react/dist/withAuth';
 
 const useStyles = makeStyles(theme => ({
@@ -46,25 +47,14 @@ const useStyles = makeStyles(theme => ({
 
 const SignInSide = (props) => {
   const classes = useStyles();
+  const auth = useContext(AuthContext)
+  // const api = useContext(ApiContext)
 
   async function onSuccess(res) {
     console.log(res)
 
     if (res.status === 'SUCCESS') {
-      try {
-        await fetch('/getUserData/' + res.user.id, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-        })
-      }
-      catch (err) {
-        console.log(err)
-      }
-
-      return props.auth.redirect({
+      return auth.redirect({
         sessionToken: res.session.token
       });
     } else {
