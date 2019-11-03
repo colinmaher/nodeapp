@@ -112,7 +112,7 @@ async function validateTweet(tweet, oktaId) {
 router.post('/:oktaId/tweet', async (req, res) => {
   if (!req.params.oktaId || !req.body) return res.sendStatus(400);
   try {
-    const tweetObj = await validateTweet(req.body.tweet)
+    const tweetObj = await validateTweet(req.body.tweet, req.params.oktaId)
     const tweet = await postTweet(tweetObj)
     res.status(200).send(tweet)
   }
@@ -137,7 +137,7 @@ router.post('/:oktaId/delete/:tweetId', async (req, res) => {
   if (!req.params.oktaId || !req.body || !req.params.tweetId) return res.sendStatus(400);
   try {
     await deleteTweet(req.params.oktaId, req.params.tweetId)
-    res.status(200)
+    res.sendStatus(200)
   }
   catch (err) {
     console.log(err)
@@ -150,17 +150,17 @@ async function editTweet(oktaId, id, newTweet) {
     const validatedTweet = await validateTweet(newTweet, oktaId)
     let i = 0
     let updatedTweet
-    console.log("validatedTweet:")
-    console.log(validatedTweet.text)
-    const userDoc = await UserModel.findOne({ oktaId: oktaId }, async (err, doc) => {
+    // console.log("validatedTweet:")
+    // console.log(validatedTweet.text)
+    await UserModel.findOne({ oktaId: oktaId }, async (err, doc) => {
       for (; i < doc.tweets.length; ++i) {
-        console.log(doc.tweets[i])
-        console.log(id)
+        // console.log(doc.tweets[i])
+        // console.log(id)
         if (doc.tweets[i]._id == id) {
           doc.tweets[i].text = validatedTweet.text
           // add tags and mentions later here
           
-          console.log(doc.tweets[i])
+          // console.log(doc.tweets[i])
           doc.save()
           updatedTweet = doc.tweets[i]
           break

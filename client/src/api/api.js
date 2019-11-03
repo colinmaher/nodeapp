@@ -40,17 +40,16 @@ export default {
   },
 
   deleteTweet: async (auth, tweet) => {
-
     const user = await auth.getUser()
     try {
-      const res = await fetch("/user/" + user.sub + "/delete/" + tweet._id, {
+      await fetch("/user/" + user.sub + "/delete/" + tweet._id, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       })
-      return res.json()
+      return
 
     }
     catch (err) {

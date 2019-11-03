@@ -10,9 +10,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AuthContext from '../../contexts/AuthContext'
 import ApiContext from '../../contexts/ApiContext'
-import { async } from 'q';
-
-
 
 const useStyles = makeStyles({
   root: {
@@ -40,6 +37,7 @@ export default function Tweet(props) {
 
   async function handleDeleteTweet() {
     try {
+      debugger
       await api.deleteTweet(auth, tweet)
       dispatch(ACTIONS.deleteTweet(tweet._id))
       setDeleteError(false)
