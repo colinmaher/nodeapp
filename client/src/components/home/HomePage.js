@@ -34,7 +34,7 @@ export default function HomePage() {
   async function fetchAndUpdate() {
     // console.log(getUserData)
     const user = await auth.getUser()
-    const data = await api.getUserData(user)
+    const data = await api.getUserData(user.sub)
 
     if (data !== undefined) {
       // console.log(data)

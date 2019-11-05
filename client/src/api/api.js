@@ -1,8 +1,8 @@
 export default {
-  getUserData: async (auth) => {
-    if (auth) {
+  getUserData: async (id) => {
+    if (id) {
       try {
-        const newUserData = await fetch('/user/' + auth.sub, {
+        const newUserData = await fetch('/user/' + id, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -18,13 +18,13 @@ export default {
     }
   },
 
-  postTweet: async (auth, tweet) => {
+  postTweet: async (userId, tweet) => {
     const payload = {
       tweet: tweet,
     }
-    const user = await auth.getUser()
+    
     try {
-      const res = await fetch('/user/' + user.sub + '/tweet', {
+      const res = await fetch('/user/' + userId + '/tweet', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -39,32 +39,30 @@ export default {
     }
   },
 
-  deleteTweet: async (auth, tweet) => {
-    const user = await auth.getUser()
+  deleteTweet: async (userId, tweet) => {
+    
     try {
-      await fetch("/user/" + user.sub + "/delete/" + tweet._id, {
+      await fetch("/user/" + userId + "/delete/" + tweet._id, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       })
-      return
-
     }
     catch (err) {
       throw Error(err)
     }
   },
 
-  editTweet: async (auth, tweetText, id) => {
+  editTweet: async (userId, tweetText, id) => {
     console.log(tweetText)
     const payload = {
       tweetText: tweetText,
     }
-    const user = await auth.getUser()
+    
     try {
-      const res = await fetch("/user/" + user.sub + "/edit/" + id, {
+      const res = await fetch("/user/" + userId + "/edit/" + id, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

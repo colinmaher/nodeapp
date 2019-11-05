@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
+
 // import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -56,7 +56,7 @@ export default function SignUp() {
         <Redirect to={{ pathname: '/' }} /> :
         (
             <Container component="main" maxWidth="xs">
-                <CssBaseline />
+
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
