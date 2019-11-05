@@ -8,20 +8,12 @@ const userSchema = new mongoose.Schema({
     oktaId: String,  
     email: String,
     profilePicUrl: {type: String, default: ""},
-<<<<<<< HEAD
-    tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
-    retweets: [{ type:  mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
-    likedTweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet', default: [] }],
-=======
     tweets: [tweetSchema],
     followers: [this],
     following: [this],
     numRetweets: { type: Number, default: 0 },
     numLikes: { type: Number, default: 0 },
     likedTweets: [tweetSchema],
->>>>>>> dev
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },
 });
