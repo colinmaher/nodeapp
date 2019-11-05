@@ -51,8 +51,4 @@ const reducer = (state = defaultState, action) => {
     }
 }
 
-<<<<<<< HEAD
-export default authReducer;
-=======
 export default reducer
->>>>>>> dev
