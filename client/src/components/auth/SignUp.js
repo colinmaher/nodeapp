@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
+
 // import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import AuthContext from '../../contexts/AuthContext'
 import RegistrationForm from './RegistrationForm';
 
 export const useStyles = makeStyles(theme => ({
@@ -34,29 +35,37 @@ export const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function SignUp(props) {
+export default function SignUp() {
     const classes = useStyles();
-    const [authenticated, setAuthenticated] = React.useState(false)
+    const [authenticated, setAuthenticated] = useState(null)
+    const auth = useContext(AuthContext)
+    async function checkAuthentication() {
+        
+        const isAuth = await auth.isAuthenticated()
+        if (isAuth !== authenticated) {
+            setAuthenticated(isAuth)
+        }
+    }
 
-    React.useEffect(() => async () => {const auth = await props.auth.isAuthenticated();
-        if (auth !== authenticated) {
-            setAuthenticated(auth);
-        }}, [authenticated])
+    useEffect(() => {
+        checkAuthentication();
+    })
 
+    if (authenticated === null) return null;
+    return authenticated ?
+        <Redirect to={{ pathname: '/' }} /> :
+        (
+            <Container component="main" maxWidth="xs">
 
-    return (
-
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign up
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign up
                 </Typography>
-                <RegistrationForm classes={classes} />
-            </div>
-        </Container>
-    );
+                    <RegistrationForm classes={classes} />
+                </div>
+            </Container>
+        )
 }

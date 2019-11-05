@@ -1,27 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from "react-redux"
-import ACTIONS from "../../actions/actions"
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import ACTIONS from "../../actions/actions";
 // import fetch from 'isomorphic-fetch'
 import Tweet from './Tweet'
-import { Typography } from '@material-ui/core'
-
-import { makeStyles } from '@material-ui/core/styles'
+import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button'
-import RefreshIcon from '@material-ui/icons/Refresh'
-import Fab from '@material-ui/core/Fab'
 
 
-const useStyles = makeStyles((theme)=> ({
-  refreshBtn: {
-    margin: theme.spacing(1)
-  },
-}))
-
-export default function Feed(props) {
-  const classes = useStyles()
-  const [loading, setLoading] = useState(false)
-  const [feedSuccess, setFeedSuccess] = useState(true)
-  const [feed, setFeed] = useState([])
+export default function History(props) {
+  // const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const [feedSuccess, setFeedSuccess] = useState(true);
+  const [feed, setFeed] = useState([]);
 
   // const dispatch = useDispatch()
   const userData = useSelector(state => {
@@ -38,9 +28,10 @@ export default function Feed(props) {
     setLoading(false)
   }
 
+  // const dispatch = useDispatch()
   useEffect(() => {
     waitForTweets()
-  }, [userData.tweets, waitForTweets])
+  }, [userData.tweets])
 
   let feedComponent
   if (!loading) {
@@ -56,18 +47,14 @@ export default function Feed(props) {
   }
   return (
     <>
-    <Fab type="submit" color="primary" aria-label="add" size="small" className={classes.refreshBtn} value="Tweet" >
-      <RefreshIcon onClick={() => {
+      <Button onClick={() => {
         setLoading(true)
         try {
           props.fetchAndUpdate()
         } catch (err) {
           setFeedSuccess(false)
         }
-      }}/>
-      {/* <Button >Refresh</Button> */}
-    </Fab>
-
+      }}>Refresh</Button>
       {feedComponent}
     </>
   )

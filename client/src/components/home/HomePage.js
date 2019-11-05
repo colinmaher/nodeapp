@@ -1,50 +1,57 @@
 // src/Home.js
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Redirect } from 'react-router-dom'
-import fetch from 'isomorphic-fetch'
+import { useDispatch } from "react-redux";
+import ACTIONS from "../../actions/actions";
 import Feed from './Feed'
 import TweetBox from './TweetBox'
+import AuthContext from '../../contexts/AuthContext'
+import ApiContext from '../../contexts/ApiContext'
 import Container from '@material-ui/core/Container'
 
-export default function HomePage (props) {
+
+export default function HomePage() {
+  const api = useContext(ApiContext)
+  const dispatch = useDispatch()
   const [authenticated, setAuthenticated] = useState(null)
-  const [userDataError, setUserDataError] = useState(null)
-  useEffect(() => {
-    async function checkAuthentication() {
-      const auth = await props.auth.isAuthenticated()
-      if (auth !== authenticated) {
-        setAuthenticated(auth)
-      }
+  const auth = useContext(AuthContext)
+
+  async function checkAuthentication() {
+    
+    const isAuth = await auth.isAuthenticated()
+    if (isAuth !== authenticated) {
+      setAuthenticated(isAuth)
     }
+  }
+
+  useEffect(() => {
     checkAuthentication()
   })
-  useEffect(() => {
-    async function getUserData() {
-      const auth = await props.auth.getUser()
-      try {
-        const userData = await fetch('/user/' + auth.sub, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
-        //dispatch redux action setting user data
-      }
-      catch(err) {
-        
-      }
+
+
+
+  async function fetchAndUpdate() {
+    // console.log(getUserData)
+    const user = await auth.getUser()
+    const data = await api.getUserData(user.sub)
+
+    if (data !== undefined) {
+      // console.log(data)
+      dispatch(ACTIONS.setUserData(data))
     }
-    getUserData()
+  }
+
+  useEffect(() => {
+    fetchAndUpdate()
   })
-  
+
   if (authenticated === null) return null;
-  if (authenticated) return      (
+  if (authenticated) return (
     <Container m={1} maxWidth="sm">
-      <TweetBox auth={props.auth}/>
-      <Feed auth={props.auth}/>
-    </Container>      
+      <TweetBox />
+      <Feed fetchAndUpdate={fetchAndUpdate} />
+    </Container>
   )
-  else return (<Redirect to={{ pathname: '/login' }}/> )
-};
+  else return (<Redirect to={{ pathname: '/login' }} />)
+}

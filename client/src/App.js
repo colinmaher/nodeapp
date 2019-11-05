@@ -8,26 +8,52 @@ import SignUp from './components/auth/SignUp';
 import config from './app.config';
 import LoginPage from './components/auth/LoginPage';
 import ProfilePage from './components/auth/ProfilePage';
+import GenericProfilePage from './components/home/GenericProfilePage';
 import './App.css';
-import PrimarySearchAppBar from './components/home/PrimarySearchAppBar';
+import AuthContext from './contexts/AuthContext'
+import ApiContext from './contexts/ApiContext'
+import PrimarySearchAppBar from './components/shared/PrimarySearchAppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import api from './api/api'
+import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+
+const theme = createMuiTheme({
+
+})
+
 
 
 export default withAuth(class App extends Component {
   render() {
     return (
-      <div className="App">
-        <PrimarySearchAppBar />
-        <Switch>
-          <Route path="/" exact render={() => <HomePage auth={this.props.auth}></HomePage>}/>
-          <Route 
-            path="/login"
-            render={() => <LoginPage auth={this.props.auth} baseUrl={config.url} />}
-          />
-          <Route path="/implicit/callback" component={ImplicitCallback} />
-          <Route path="/signup" render={() => <SignUp auth={this.props.auth}></SignUp>} />
-          <SecureRoute path="/profile" component={ProfilePage} />
-        </Switch>
-      </div>
+      <AuthContext.Provider value={this.props.auth}>
+        <ApiContext.Provider value={api}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <div className="App">
+              <PrimarySearchAppBar />
+              <Switch>
+                <Route path="/" exact component={HomePage} />
+                <Route
+                  exact path="/login"
+                  render={() => <LoginPage baseUrl={config.url} />}
+                />
+                <Route path="/implicit/callback" component={ImplicitCallback} />
+                <Route exact path="/signup" component={SignUp} />
+                <SecureRoute path="/profile" component={ProfilePage} />
+                <Route path="/profile/:username" render={GenericProfilePage} />
+
+              </Switch>
+            </div>
+          </ThemeProvider>
+
+        </ApiContext.Provider>
+
+
+      </AuthContext.Provider>
+
     );
   }
 })

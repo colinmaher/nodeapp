@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -8,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import OktaSignInWidget from "./OktaSignInWidget";
+import AuthContext from '../../contexts/AuthContext'
 // import withAuth from '@okta/okta-react/dist/withAuth';
 
 const useStyles = makeStyles(theme => ({
@@ -46,25 +46,14 @@ const useStyles = makeStyles(theme => ({
 
 const SignInSide = (props) => {
   const classes = useStyles();
+  const auth = useContext(AuthContext)
+  // const api = useContext(ApiContext)
 
   async function onSuccess(res) {
     console.log(res)
 
     if (res.status === 'SUCCESS') {
-      try {
-        await fetch('/getUserData/' + res.user.id, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-        })
-      }
-      catch (err) {
-        console.log(err)
-      }
-
-      return props.auth.redirect({
+      return auth.redirect({
         sessionToken: res.session.token
       });
     } else {
@@ -82,7 +71,6 @@ const SignInSide = (props) => {
   return (
     < >
       <Grid container component="main" className={classes.root}>
-        <CssBaseline />
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <div className={classes.paper}>
