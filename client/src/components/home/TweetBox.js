@@ -1,10 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
+import Grid from '@material-ui/core/Grid'
 import ACTIONS from "../../actions/actions"
 import AuthContext from '../../contexts/AuthContext'
 import ApiContext from '../../contexts/ApiContext'
@@ -13,10 +14,26 @@ const useStyles = makeStyles(theme => ({
   tweetBtn: {
     margin: theme.spacing(1)
   },
-  textField: {
-    margin: theme.spacing(2)
-  },
 }))
+
+
+// const useStylesTweetField = makeStyles(theme => )
+
+
+const StyledTextField = withStyles(theme => ({
+  root: {
+    margin: theme.spacing(2),
+    width: '100%',
+    height: '100%',
+    // backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+      borderColor: theme.palette.primary.main,
+    }
+  },
+  disabled: {},
+  focused: {},
+  error: {},
+}))(TextField)
 
 export default function TweetBox(props) {
   const classes = useStyles()
@@ -33,13 +50,14 @@ export default function TweetBox(props) {
   })
 
   function handleTweetChange(e) {
-    const tweetText = e.target.value
-    if (tweetText.length > 280 || tweetText.length === 0) {
-      setTweetText(tweetText)
+    const text = e.target.value
+    console.log(text)
+    if (text.length > 280 || text.length === 0) {
+      setTweetText(text)
       setValidTweet(false)
     }
     else {
-      setTweetText(tweetText)
+      setTweetText(text)
       setValidTweet(true)
     }
   }
@@ -76,29 +94,46 @@ export default function TweetBox(props) {
     }
   }
 
+  // function TweetField(props) {
+  //   const tweetFieldClasses = useStylesTweetField()
+  //   return (
+  //     <TextField
+
+
+  //       InputProps={{ tweetFieldClasses }}
+  //       {...props}
+  //     />
+  //   )
+
+  // }
+
   const tweetError = tweetSuccess ? <></> : <span>{errorMsg}</span>
   return (
     <Box m={1} >
-      <form autoComplete="off" onSubmit={handleTweetSubmit}>
-        <div className="">
-          <TextField
-            id="outlined-dense-multiline"
-            type="text"
-            margin="dense"
-            variant="outlined"
-            multiline
-            placeholder="What's on your mind?"
-            rowsMax="4"
-            value={tweetText}
-            onChange={handleTweetChange}
-            className={classes.textField}
-          />
-          {
-            validTweet ?
-              <Fab type="submit" color="primary" aria-label="add" className={classes.tweetBtn} value="Tweet" ><AddIcon /></Fab> :
-              <Fab type="submit" color="primary" aria-label="add" className={classes.tweetBtn} disabled value="Tweet" ><AddIcon /></Fab>
-          }
-        </div>
+        <form autoComplete="off" onSubmit={handleTweetSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={10} >
+            <StyledTextField id="outlined-dense-multiline"
+              type="text"
+              margin="dense"
+              variant="outlined"
+              multiline
+              placeholder="What's on your mind?"
+              rowsMax="4"
+              value={tweetText}
+              onChange={handleTweetChange} />
+          </Grid>
+          <Grid item>
+            {
+              validTweet ?
+                <Fab type="submit" color="primary" aria-label="add" className={classes.tweetBtn} value="Tweet" ><AddIcon /></Fab> :
+                <Fab type="submit" color="primary" aria-label="add" className={classes.tweetBtn} disabled value="Tweet" ><AddIcon /></Fab>
+            }
+          </Grid>
+        </Grid>
+
+
+
 
         {tweetError}
 
