@@ -29,6 +29,7 @@ async function createMongoUser(res, user) {
       throw Error(err)
     }
   }
+  return
 }
 
 /* Create a new User (register). */
@@ -52,7 +53,7 @@ router.post('/', async (req, res) => {
 
   try {
     const user = await oktaClient.createUser(newUser)
-    // console.log(user)
+    console.log(user)
     await createMongoUser(res, user)
     res.status(200).send( user )
   }
