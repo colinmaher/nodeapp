@@ -18,7 +18,8 @@
     "postinstall": "run-p install:server install:client",
     "install:server": "cd server && npm install",
     "install:client": "cd client && npm install",
-    "start": "concurrently --kill-others-on-fail \"npm run start:server\" \"npm run start:client\"",
+    "start": "cd server && npm run start:prod",
+    "start:dev": "concurrently --kill-others-on-fail \"npm run start:server\" \"npm run start:client\"",
     "start:server": "npm run start --prefix server",
     "start:client": "npm run start --prefix client",
     "build": "run-p build:server build:client",
@@ -31,8 +32,5 @@
   "devDependencies": {
     "concurrently": "^4.1.2",
     "npm-run-all": "^4.0.2"
-  },
-  "dependencies": {
-    "@okta/okta-react": "^1.2.3"
   }
 }
