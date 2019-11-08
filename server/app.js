@@ -35,8 +35,8 @@ if (isProduction && cluster.isMaster) {
   //Configure app
   const app = express()
   app.use(cors())
-  app.use(express.static(path.join(__dirname, '../client/build')));
   app.use(helmet())
+  app.use(express.static(path.join(__dirname, '../client/build')));
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
     
