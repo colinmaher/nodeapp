@@ -5,12 +5,12 @@ const oktaClient = require('../lib/oktaClient');
 const UserModel = require('../models/userModel').UserModel
 
 async function createMongoUser(res, user) {
-  const db = mongoose.connection;
-  // console.log(user)
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function () {
-    console.log("connected to mongo")
-  });
+  // const db = mongoose.connection;
+  // // console.log(user)
+  // db.on('error', console.error.bind(console, 'connection error:'));
+  // db.once('open', function () {
+  //   console.log("connected to mongo")
+  // });
 
   if (user) {
     const processedUser = {

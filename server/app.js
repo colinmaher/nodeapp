@@ -53,11 +53,12 @@ if (isProduction && cluster.isMaster) {
     require('dotenv').config()
 
     //Connect db
-    mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true }).catch(err => { console.error(err) })
+    mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true })
   }
   else {
     app.use(morgan('combined'))
-    mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true }).catch(err => { console.error(err) })
+    console.log(process.env.MONGODB_URI)
+    mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   }
 
   //Configure Redis session store
