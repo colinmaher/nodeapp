@@ -32,20 +32,17 @@ if (isProduction && cluster.isMaster) {
   });
 
 } else {
-  const app = express()
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  //Configure mongoose's promise to global promise
-  mongoose.promise = global.Promise
-
-
   //Configure app
-  app.use(helmet())
+  const app = express()
   app.use(cors())
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(helmet())
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
-
-
-
+    
+  // connect db
+  //Configure mongoose's promise to global promise
+  mongoose.promise = global.Promise
   if (!isProduction) {
     mongoose.set('debug', true)
     app.use(errorHandler())
