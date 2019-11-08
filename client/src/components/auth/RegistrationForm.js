@@ -8,13 +8,15 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
 import OktaAuth from '@okta/okta-auth-js';
-import { withAuth } from '@okta/okta-react';
+// import { withAuth } from '@okta/okta-react';
 
 import { Link } from "react-router-dom";
 
 import config from '../../app.config';
+import AuthContext from '../../contexts/AuthContext'
 
 class RegistrationForm extends React.Component {
+  static contextType = AuthContext
   constructor(props) {
     super(props);
     this.state = {
@@ -26,8 +28,6 @@ class RegistrationForm extends React.Component {
     };
     this.oktaAuth = new OktaAuth({ url: config.url });
     this.checkAuthentication = this.checkAuthentication.bind(this);
-    this.checkAuthentication();
-
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
     this.handleLastNameChange = this.handleLastNameChange.bind(this);
@@ -35,15 +35,15 @@ class RegistrationForm extends React.Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
-  async checkAuthentication() {
-    const sessionToken = await this.props.auth.getIdToken();
-    if (sessionToken) {
-      this.setState({ sessionToken });
+  async checkAuthentication(auth) {
+    const token = await auth.getIdToken();
+    if (token) {
+      this.setState({ token });
     }
   }
-
   componentDidUpdate() {
-    this.checkAuthentication();
+    console.log(this.context)
+    this.checkAuthentication(this.context);
   }
 
   handleFirstNameChange(e) {
@@ -70,15 +70,20 @@ class RegistrationForm extends React.Component {
       body: JSON.stringify(this.state)
     })
       .then(() => {
+        console.log("okta sign in")
         this.oktaAuth
           .signIn({
             username: this.state.email,
             password: this.state.password
           })
-          .then(res =>
+          .then(res => {
+            console.log(res)
             this.setState({
               sessionToken: res.sessionToken
             })
+          }
+            
+
           )
       })
       .catch(err => console.log);
@@ -86,7 +91,8 @@ class RegistrationForm extends React.Component {
 
   render() {
     if (this.state.sessionToken) {
-      this.props.auth.redirect({ sessionToken: this.state.sessionToken });
+      console.log(this.context)
+      this.context.redirect({ sessionToken: this.state.sessionToken });
       return null;
     }
   
@@ -179,5 +185,5 @@ RegistrationForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withAuth(RegistrationForm);
+export default RegistrationForm;
 

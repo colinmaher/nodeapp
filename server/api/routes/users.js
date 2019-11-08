@@ -23,19 +23,17 @@ async function createMongoUser(res, user) {
     // console.log(processedUser)
     try {
       await UserModel.create(processedUser)
-      return
     }
     catch (err) {
       throw Error(err)
     }
   }
-  return
 }
 
 /* Create a new User (register). */
 router.post('/', async (req, res) => {
   // console.log(req.body)
-  // if (req.body === undefined) return res.sendStatus(400);
+  if (req.body === undefined) return res.sendStatus(400);
   const newUser = {
     profile: {
       firstName: req.body.firstName,
@@ -53,7 +51,7 @@ router.post('/', async (req, res) => {
 
   try {
     const user = await oktaClient.createUser(newUser)
-    console.log(user)
+    // console.log(user)
     await createMongoUser(res, user)
     res.status(200).send( user )
   }

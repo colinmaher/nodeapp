@@ -7,8 +7,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import AuthContext from '../../contexts/AuthContext'
 import RegistrationForm from './RegistrationForm';
+import AuthContext from '../../contexts/AuthContext'
 
 export const useStyles = makeStyles(theme => ({
     '@global': {
