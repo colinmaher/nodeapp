@@ -37,11 +37,6 @@ if (isProduction && cluster.isMaster) {
   //Configure mongoose's promise to global promise
   mongoose.promise = global.Promise
 
-  require('dotenv').config()
-  //Configure isProduction variable
-
-  const client = redis.createClient(6380, process.env.REDISCACHEHOSTNAME,
-    { auth_pass: process.env.REDISCACHEKEY, tls: { servername: process.env.REDISCACHEHOSTNAME } })
 
   //Configure app
   app.use(helmet())
@@ -49,7 +44,27 @@ if (isProduction && cluster.isMaster) {
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
 
+
+
+  if (!isProduction) {
+    mongoose.set('debug', true)
+    app.use(errorHandler())
+    app.use(morgan('dev'))
+    require('dotenv').config()
+
+    //Connect db
+    mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true }).catch(err => { morgan(err) })
+  }
+  else {
+    app.use(morgan('combined'))
+    mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+  }
+
   //Configure Redis session store
+
+  const client = redis.createClient(6380, process.env.REDISCACHEHOSTNAME,
+    { auth_pass: process.env.REDISCACHEKEY, tls: { servername: process.env.REDISCACHEHOSTNAME } })
+
   const options = {
     client: client
   }
@@ -62,21 +77,8 @@ if (isProduction && cluster.isMaster) {
     resave: false,
     saveUninitialized: true
   }))
-  
+
   app.use(router)
-
-  if (!isProduction) {
-    mongoose.set('debug', true)
-    app.use(errorHandler())
-    app.use(morgan('dev'))
-
-    //Connect db
-    mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true }).catch(err => { morgan(err) })
-  }
-  else {
-    app.use(morgan('combined'))
-    mongoose.connect(process.env.MONGO_HOST_URL, { useNewUrlParser: true })
-  }
 
   app.use((req, res, next) => {
     // console.log(req.session)
