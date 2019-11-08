@@ -34,17 +34,22 @@ export default function HomePage() {
   async function fetchAndUpdate() {
     // console.log(getUserData)
     const user = await auth.getUser()
-    const data = await api.getUserData(user.sub)
+    if (user != null) {
+      const data = await api.getUserData(user.sub)
 
-    if (data !== undefined) {
-      // console.log(data)
-      dispatch(ACTIONS.setUserData(data))
+      if (data !== undefined) {
+        // console.log(data)
+        dispatch(ACTIONS.setUserData(data))
+      }
     }
+
   }
 
   useEffect(() => {
-    fetchAndUpdate()
-  })
+    if (authenticated != null) {
+      fetchAndUpdate()
+    }
+  }, [authenticated])
 
   if (authenticated === null) return null;
   if (authenticated) return (

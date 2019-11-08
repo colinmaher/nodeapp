@@ -13,12 +13,15 @@ import EditIcon from '@material-ui/icons/Edit'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 
+import AccountCircle from '@material-ui/icons/AccountCircle';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: '100px',
   },
   tweet: {
     textAlign: 'left',
+    wordWrap: 'break-word',
   },
   btn: {
 
@@ -34,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
   },
   btnContainer: {
-
+    flexDirection: "column"
   }
 }))
 
@@ -66,10 +69,17 @@ export default function Tweet(props) {
 
     if (tweet.authorOktaId == userData.oktaId) {
       return (
-        <Grid item className={classes.btnContainer} >
-          <Button color="primary" className={classes.btn} onClick={handleDeleteTweet}><DeleteIcon /></Button>
-          <Button color="primary" className={classes.btn} onClick={() => setEditBoxOpen(!editBoxOpen)}><EditIcon /></Button>
+        <Grid container className={classes.btnContainer}>
+          <Grid item >
+            <Button color="primary" className={classes.btn} onClick={handleDeleteTweet}><DeleteIcon /></Button>
+
+          </Grid>
+          <Grid item >
+            <Button color="primary" className={classes.btn} onClick={() => setEditBoxOpen(!editBoxOpen)}><EditIcon /></Button>
+          </Grid>
+
         </Grid>
+
       )
     }
     else return null
@@ -80,20 +90,30 @@ export default function Tweet(props) {
       <Grid container
         direction="row"
         justify="center"
-        alignItems="center" className={classes.root}>
+        alignItems="center"
+        className={classes.root}
+      >
         {/* <Paper> */}
-        <Grid item sm={8} xs={12}>
+
+        <Grid item xs={2} >
+          <AccountCircle color="primary" fontSize="large" />
+        </Grid>
+
+        <Grid item xs={8}>
           <Typography variant="body1" className={classes.tweet} gutterBottom>
             {tweet.text}
           </Typography>
         </Grid>
+        <Grid xs={2} item>
+          {btnContainer()}
+        </Grid>
 
-        {btnContainer()}
+
 
 
 
         {deleteError ? "Error deleting tweet." : null}
-        
+
       </Grid>
       {editBoxOpen ? <TweetBox tweetText={tweet.text} id={tweet._id} editing={true} /> : null}
 

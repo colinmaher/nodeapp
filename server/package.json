@@ -9,7 +9,7 @@
     "url": "git+https://github.com/colinmaher/nodeapp.git"
   },
   "scripts": {
-    "build": "echo 'No build configured\n'",
+    "build": "cd ../client && npm install && npm run build",
     "start": "nodemon app.js",
     "start:prod": "node app.js"
   },
