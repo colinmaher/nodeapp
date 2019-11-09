@@ -17,6 +17,20 @@ const useStyles = makeStyles((theme)=> ({
   },
 }))
 
+function LatestFeed(props) {
+  const classes = useStyles()
+  const [loading, setLoading] = useState(false)
+  const [feedSuccess, setFeedSuccess] = useState(true)
+  const [feed, setFeed] = useState([])
+  const userData = useSelector(state => {
+    return state.userData
+  });
+
+  return (
+    <Feed />
+  )
+}
+
 export default function Feed(props) {
   const classes = useStyles()
   const [loading, setLoading] = useState(false)

@@ -54,7 +54,10 @@ if (isProduction && cluster.isMaster) {
   }
   else {
     app.use(morgan('combined'))
+<<<<<<< Updated upstream
     console.log(process.env.MONGODB_URI)
+=======
+>>>>>>> Stashed changes
     mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   }
 

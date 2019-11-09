@@ -66,20 +66,16 @@ export default function Tweet(props) {
   }
 
   const btnContainer = () => {
-
     if (tweet.authorOktaId == userData.oktaId) {
       return (
         <Grid container className={classes.btnContainer}>
           <Grid item >
             <Button color="primary" className={classes.btn} onClick={handleDeleteTweet}><DeleteIcon /></Button>
-
           </Grid>
           <Grid item >
             <Button color="primary" className={classes.btn} onClick={() => setEditBoxOpen(!editBoxOpen)}><EditIcon /></Button>
           </Grid>
-
         </Grid>
-
       )
     }
     else return null
