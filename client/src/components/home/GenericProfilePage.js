@@ -3,7 +3,7 @@ import {
     Redirect,
     useParams
 } from "react-router-dom";
-import History from "./History"
+// import History from "./History"
 import Container from '@material-ui/core/Container'
 
 function GenericProfilePage(props) {

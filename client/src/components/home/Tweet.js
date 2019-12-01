@@ -14,6 +14,8 @@ import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Avatar from '@material-ui/core/Avatar';
+import { deepOrange, deepPurple, indigo, red, orange, green, blue, teal } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +40,12 @@ const useStyles = makeStyles((theme) => ({
   },
   btnContainer: {
     flexDirection: "column"
+  },
+  authorName: {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
   }
+
 }))
 
 export default function Tweet(props) {
@@ -48,15 +55,43 @@ export default function Tweet(props) {
   const [deleteError, setDeleteError] = React.useState(null)
   const tweet = props.tweet
   const dispatch = useDispatch()
-  // const auth = useContext(AuthContext)
+  const auth = useContext(AuthContext)
   const api = useContext(ApiContext)
   const userData = useSelector(state => {
     return state.userData
   })
+  const defaultUserIconColors =
+    [
+      {
+        backgroundColor: deepPurple[500],
+      },
+      {
+        backgroundColor: deepOrange[500],
+      },
+      {
+        backgroundColor: green[500],
+      },
+      {
+        backgroundColor: orange[500],
+      },
+      {
+        backgroundColor: red[500],
+      },
+      {
+        backgroundColor: indigo[300],
+      },
+      {
+        backgroundColor: blue[300],
+      },
+      {
+        backgroundColor: teal[500],
+      }
+    ]
 
   async function handleDeleteTweet() {
     try {
-      await api.deleteTweet(userData.oktaId, tweet)
+      const token = await auth.getAccessToken()
+      await api.deleteTweet(userData.oktaId, tweet, token)
       dispatch(ACTIONS.deleteTweet(tweet._id))
       setDeleteError(false)
     }
@@ -82,20 +117,38 @@ export default function Tweet(props) {
   }
 
   return (
-    <Box className={classes.tweetBox} boxShadow={2}>
+    <Box className={classes.tweetBox} boxShadow={2} p={2}>
       <Grid container
         direction="row"
         justify="center"
         alignItems="center"
         className={classes.root}
+        spacing={1}
+        wrap="nowrap"
       >
         {/* <Paper> */}
 
         <Grid item xs={2} >
-          <AccountCircle color="primary" fontSize="large" />
+          <Grid container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            className={classes.root}
+            spacing={1}
+            wrap="nowrap"
+          >
+            <Grid item xs={12}>
+              {tweet.authorName ? <Avatar style={defaultUserIconColors[Math.floor(Math.random() * Math.floor(defaultUserIconColors.length))]}>{tweet.authorName[0]}</Avatar> : <AccountCircle color="primary" fontSize="large" />}
+            </Grid>
+            <Grid item xs={12}>
+              <Typography className={classes.authorName}>{tweet.authorName}</Typography>
+            </Grid>
+
+          </Grid>
+
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid item xs={8} >
           <Typography variant="body1" className={classes.tweet} gutterBottom>
             {tweet.text}
           </Typography>

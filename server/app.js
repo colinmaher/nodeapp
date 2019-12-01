@@ -19,6 +19,9 @@ const router = express.Router()
 const redis = require("redis")
 const morgan = require('morgan')
 
+if (!isProduction) require('dotenv').config() //in dev use .env file otherwise get env variables from heroku
+
+
 if (isProduction && cluster.isMaster) {
   console.error(`Node cluster master ${process.pid} is running`);
 
@@ -32,40 +35,20 @@ if (isProduction && cluster.isMaster) {
   });
 
 } else {
-  //Configure app
   const app = express()
-  app.use(cors())
+  //Configure app
   app.use(helmet())
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(cors())
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
-    
-  // connect db
+  app.use(express.static(path.join(__dirname, '../client/build')));
   //Configure mongoose's promise to global promise
   mongoose.promise = global.Promise
-  if (!isProduction) {
-    mongoose.set('debug', true)
-    app.use(errorHandler())
-    app.use(morgan('dev'))
-    require('dotenv').config()
-
-    //Connect db
-    mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true })
-  }
-  else {
-    app.use(morgan('combined'))
-<<<<<<< Updated upstream
-    console.log(process.env.MONGODB_URI)
-=======
->>>>>>> Stashed changes
-    mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  }
-
-  //Configure Redis session store
 
   const client = redis.createClient(6380, process.env.REDISCACHEHOSTNAME,
     { auth_pass: process.env.REDISCACHEKEY, tls: { servername: process.env.REDISCACHEHOSTNAME } })
 
+  //Configure Redis session store
   const options = {
     client: client
   }
@@ -80,6 +63,19 @@ if (isProduction && cluster.isMaster) {
   }))
 
   app.use(router)
+
+  if (!isProduction) {
+    mongoose.set('debug', true)
+    app.use(errorHandler())
+    app.use(morgan('dev'))
+
+    //Connect db
+    mongoose.connect('mongodb://localhost/twtr', { useNewUrlParser: true }).catch(err => { morgan(err) })
+  }
+  else {
+    app.use(morgan('combined'))
+    mongoose.connect(process.env.MONGO_HOST_URL, { useNewUrlParser: true })
+  }
 
   app.use((req, res, next) => {
     // console.log(req.session)
@@ -120,6 +116,6 @@ if (isProduction && cluster.isMaster) {
     })
   })
 
-  app.listen(process.env.PORT, () => console.log('Server running on port ' + process.env.PORT))
+  app.listen(80, () => console.log('Server running on port ' + process.env.PORT))
 
 }

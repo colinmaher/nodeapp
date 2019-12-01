@@ -36,7 +36,7 @@ const StyledTextField = withStyles(theme => ({
 
 export default function TweetBox(props) {
   const classes = useStyles()
-  // const auth = useContext(AuthContext)
+  const auth = useContext(AuthContext)
   const api = useContext(ApiContext)
   const dispatch = useDispatch()
   const editing = props.editing || false
@@ -65,7 +65,8 @@ export default function TweetBox(props) {
     e.preventDefault()
     if (editing) {
       try {
-        const tweet = await api.editTweet(userData.oktaId, tweetText, props.id)
+        const token = await auth.getAccessToken()
+        const tweet = await api.editTweet(userData.oktaId, tweetText, props.id, token)
         console.log(tweet)
         dispatch(ACTIONS.editTweet(tweet))
         setTweetSuccess(true)
@@ -79,7 +80,8 @@ export default function TweetBox(props) {
     }
     else {
       try {
-        const tweet = await api.postTweet(userData.oktaId, tweetText)
+        const token = await auth.getAccessToken()
+        const tweet = await api.postTweet(userData.oktaId, tweetText, token)
         dispatch(ACTIONS.tweet(tweet))
         setTweetSuccess(true)
         setTweetText('')

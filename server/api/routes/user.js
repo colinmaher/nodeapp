@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const UserModel = require('../models/userModel').UserModel
 const TweetModel = require('../models/tweetModel').TweetModel
 const TagModel = require('../models/tagModel').TagModel
+const authRequired = require('../lib/oktaAuthMiddleware')
+console.log(authRequired)
 
 async function getUser(res, id) {
   const db = mongoose.connection
@@ -21,7 +23,7 @@ async function getUser(res, id) {
   }
 }
 
-router.get('/:oktaId', async (req, res) => {
+router.get('/:oktaId', authRequired, async (req, res) => {
   if (!req.params.oktaId) return res.sendStatus(400);
   try {
     const userData = await getUser(res, req.params.oktaId)
@@ -85,6 +87,8 @@ async function postTweet(tweetObj) {
   try {
     // add tweet to mongo here
     const doc = await UserModel.findOne({ oktaId: tweetObj.authorOktaId })
+    tweetObj.createdBy = doc._id
+    tweetObj.authorName = doc.firstName + ' ' + doc.lastName
     const tweet = await TweetModel.create(tweetObj)
     doc.tweets.push(tweet)
     doc.save()
@@ -109,7 +113,7 @@ async function validateTweet(tweet, oktaId) {
   else throw Error("Invalid tweet")
 }
 
-router.post('/:oktaId/tweet', async (req, res) => {
+router.post('/:oktaId/tweet', authRequired, async (req, res) => {
   if (!req.params.oktaId || !req.body) return res.sendStatus(400);
   try {
     const tweetObj = await validateTweet(req.body.tweet, req.params.oktaId)
@@ -133,7 +137,7 @@ async function deleteTweet(oktaId, id) {
   }
 }
 
-router.post('/:oktaId/delete/:tweetId', async (req, res) => {
+router.post('/:oktaId/delete/:tweetId', authRequired, async (req, res) => {
   if (!req.params.oktaId || !req.body || !req.params.tweetId) return res.sendStatus(400);
   try {
     await deleteTweet(req.params.oktaId, req.params.tweetId)
@@ -174,7 +178,7 @@ async function editTweet(oktaId, id, newTweet) {
   }
 }
 
-router.post('/:oktaId/edit/:tweetId', async (req, res) => {
+router.post('/:oktaId/edit/:tweetId', authRequired, async (req, res) => {
   if (!req.params.oktaId || !req.body || !req.body.tweetText || !req.params.tweetId) return res.sendStatus(400);
   try {
     const tweet = await editTweet(req.params.oktaId, req.params.tweetId, req.body.tweetText)

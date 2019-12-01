@@ -4,6 +4,7 @@ const Types = {
     TWEET: "TWEET",
     DELETE_TWEET: "DELETE_TWEET",
     EDIT_TWEET: "EDIT_TWEET",
+    SET_LATEST_TWEETS: "SET_LATEST_TWEETS",
 };
 // actions
 
@@ -23,9 +24,14 @@ const deleteTweet = id => ({
     payload: id
 })
 
-const editTweet = (tweet) => ({
+const editTweet = tweet => ({
     type: Types.EDIT_TWEET,
     payload: { tweet }
+})
+
+const setLatestTweets = latestTweets => ({
+    type: Types.SET_LATEST_TWEETS,
+    payload: { latestTweets }
 })
 
 export default {
@@ -33,5 +39,6 @@ export default {
     tweet,
     deleteTweet,
     editTweet,
+    setLatestTweets,
     Types
 }
