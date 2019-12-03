@@ -53,7 +53,6 @@ const SignInSide = (props) => {
     console.log(res)
 
     if (res.status === 'SUCCESS') {
-      debugger
       return auth.redirect({
         sessionToken: res.session.token
       });

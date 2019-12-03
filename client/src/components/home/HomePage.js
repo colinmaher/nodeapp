@@ -19,20 +19,14 @@ export default function HomePage() {
   const dispatch = useDispatch()
   const [authenticated, setAuthenticated] = useState(null)
   const [toggleFeed, setToggleFeed] = useState(true)
-  const [page, setPage] = useState(0)
   const auth = useContext(AuthContext)
 
   async function checkAuthentication() {
-
     const isAuth = await auth.isAuthenticated()
     if (isAuth !== authenticated) {
       setAuthenticated(isAuth)
     }
   }
-
-  // const userData = useSelector(state => {
-  //   return state.userData
-  // })
 
   useEffect(() => {
     checkAuthentication()
@@ -46,24 +40,19 @@ export default function HomePage() {
 
       if (data !== undefined) {
         // console.log(data)
+        data.tweets = data.tweets.reverse()
         dispatch(ACTIONS.setUserData(data))
       }
     }
-
   }
 
   async function fetchAndUpdateLatest(page, limit) {
-
     const data = await api.getLatestTweets(page, limit)
     if (data !== undefined) {
       // console.log(data)
       dispatch(ACTIONS.setLatestTweets(data))
     }
   }
-
-
-
-
 
   const feedIconProps = toggleFeed ? {
     color: 'primary'
@@ -84,7 +73,6 @@ export default function HomePage() {
         <Grid item xs={12}>
           <TweetBox />
         </Grid>
-
       </Grid>
       <IconButton>
         <HomeIcon {...feedIconProps} fontSize="large" onClick={() => { setToggleFeed(true) }} />
@@ -93,12 +81,7 @@ export default function HomePage() {
         <HistoryIcon {...latestIconProps} fontSize="large" onClick={() => { setToggleFeed(false) }} />
       </IconButton>
       {toggleFeed ? <HistoryFeed fetchAndUpdate={fetchAndUpdateHistory} /> : <LatestFeed fetchAndUpdate={fetchAndUpdateLatest} />}
-
-
-
     </Container>
-
-
   )
   else return (<Redirect to={{ pathname: '/login' }} />)
 }

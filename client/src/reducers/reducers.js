@@ -3,8 +3,9 @@ import _ from "lodash"
 
 const defaultState = {
   userData: {
-    tweets: []
+    tweets: [],
   },
+  latestTweets: []
 }
 
 const reducer = (state = defaultState, action) => {
@@ -20,7 +21,8 @@ const reducer = (state = defaultState, action) => {
     case ACTIONS.Types.TWEET: {
       const data = action.payload
       let newState = _.cloneDeep(state)
-      newState.userData.tweets.push(data)
+      newState.userData.tweets.unshift(data)
+      newState.latestTweets.unshift(data)
       return newState
     }
     case ACTIONS.Types.DELETE_TWEET: {
@@ -30,6 +32,9 @@ const reducer = (state = defaultState, action) => {
         newState.userData.tweets.filter((tweet) => {
           return tweet._id !== id
         })
+      newState.latestTweets = state.latestTweets.filter((tweet) => {
+        return tweet._id !== id
+      })
       return newState
     }
     case ACTIONS.Types.EDIT_TWEET: {
@@ -45,14 +50,9 @@ const reducer = (state = defaultState, action) => {
       return newState
     }
     case ACTIONS.Types.SET_LATEST_TWEETS: {
-      const latestTweets = action.payload.latestTweets || []
+      const latestTweets = action.payload.latestTweets
       let newState = _.cloneDeep(state)
-      if (state.latestTweets) {
-        newState.latestTweets = state.latestTweets.concat(latestTweets)
-      }
-      else {
-        newState.latestTweets = latestTweets
-      }
+      newState.latestTweets = state.latestTweets.concat(latestTweets)
       return newState
     }
     default:

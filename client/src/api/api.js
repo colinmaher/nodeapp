@@ -1,6 +1,26 @@
 export default {
+  setUserData: async (id, token, payload) => {
+    if (id && token && payload) {
+      try {
+        const newUserData = await fetch('/user/' + id, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          },
+          body: JSON.stringify(payload)
+        })
+        return newUserData.json()
+      }
+      catch (err) {
+        throw "Error updating user data"
+      }
+    }
+  },
+
   getUserData: async (id, token) => {
-    if (id) {
+    if (id && token) {
       try {
         const newUserData = await fetch('/user/' + id, {
           method: 'GET',
@@ -14,7 +34,7 @@ export default {
         return newUserData.json()
       }
       catch (err) {
-        throw Error(err)
+        throw "Error fetching user data"
       }
     }
   },
@@ -27,7 +47,8 @@ export default {
     const buildUri = (url, args) => {
       let qs = ''
       for (const key in args) {
-        qs += encodeURIComponent(key) + '=' + encodeURIComponent(args[key]) + '&'
+        if (args.hasOwnProperty(key))
+          qs += encodeURIComponent(key) + '=' + encodeURIComponent(args[key]) + '&'
       }
       if (qs.length > 0) {
         qs = qs.substring(0, qs.length - 1)
@@ -47,71 +68,75 @@ export default {
       return res.json()
     }
     catch (err) {
-      throw Error(err)
+      throw "Error fetching latest tweets"
     }
   },
 
   postTweet: async (userId, tweet, token) => {
-    const payload = {
-      tweet: tweet,
+    if (userId && tweet && token) {
+      const payload = {
+        tweet: tweet,
+      }
+      try {
+        const res = await fetch('/user/' + userId + '/tweet', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          },
+          body: JSON.stringify(payload)
+        })
+        return res.json()
+      }
+      catch (err) {
+        throw "Error posting tweet"
+      }
     }
 
-    try {
-      const res = await fetch('/user/' + userId + '/tweet', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token,
-        },
-        body: JSON.stringify(payload)
-      })
-      return res.json()
-    }
-    catch (err) {
-      throw Error(err)
-    }
   },
 
   deleteTweet: async (userId, tweet, token) => {
-
-    try {
-      await fetch("/user/" + userId + "/delete/" + tweet._id, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token,
-        }
-      })
-    }
-    catch (err) {
-      throw Error(err)
+    if (userId && tweet && token) {
+      try {
+        await fetch("/user/" + userId + "/delete/" + tweet._id, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          }
+        })
+      }
+      catch (err) {
+        throw "Error deleting tweet"
+      }
     }
   },
 
   editTweet: async (userId, tweetText, id, token) => {
-    console.log(tweetText)
-    const payload = {
-      tweetText: tweetText,
-    }
+    if (userId && tweetText && token && id) {
+      const payload = {
+        tweetText: tweetText,
+      }
 
-    try {
-      const res = await fetch("/user/" + userId + "/edit/" + id, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token,
-        },
-        body: JSON.stringify(payload)
-      })
-      const json = await res.json()
-      // console.log(json)
-      return json
-    }
-    catch (err) {
-      throw Error(err)
+      try {
+        const res = await fetch("/user/" + userId + "/edit/" + id, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          },
+          body: JSON.stringify(payload)
+        })
+        const json = await res.json()
+        // console.log(json)
+        return json
+      }
+      catch (err) {
+        throw "Error updating tweet"
+      }
     }
   },
 }

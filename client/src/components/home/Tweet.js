@@ -13,9 +13,8 @@ import EditIcon from '@material-ui/icons/Edit'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Avatar from '@material-ui/core/Avatar';
-import { deepOrange, deepPurple, indigo, red, orange, green, blue, teal } from '@material-ui/core/colors';
+import Avatar from '@material-ui/core/Avatar'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +43,11 @@ const useStyles = makeStyles((theme) => ({
   authorName: {
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis'
-  }
+  },
+  defaultAvatar: {
+    backgroundColor: 'orange'
+  },
+
 
 }))
 
@@ -60,33 +63,7 @@ export default function Tweet(props) {
   const userData = useSelector(state => {
     return state.userData
   })
-  const defaultUserIconColors =
-    [
-      {
-        backgroundColor: deepPurple[500],
-      },
-      {
-        backgroundColor: deepOrange[500],
-      },
-      {
-        backgroundColor: green[500],
-      },
-      {
-        backgroundColor: orange[500],
-      },
-      {
-        backgroundColor: red[500],
-      },
-      {
-        backgroundColor: indigo[300],
-      },
-      {
-        backgroundColor: blue[300],
-      },
-      {
-        backgroundColor: teal[500],
-      }
-    ]
+
 
   async function handleDeleteTweet() {
     try {
@@ -103,7 +80,7 @@ export default function Tweet(props) {
   const btnContainer = () => {
     if (tweet.authorOktaId == userData.oktaId) {
       return (
-        <Grid container className={classes.btnContainer}>
+        <Grid container spacing={1} className={classes.btnContainer}>
           <Grid item >
             <Button color="primary" className={classes.btn} onClick={handleDeleteTweet}><DeleteIcon /></Button>
           </Grid>
@@ -138,7 +115,15 @@ export default function Tweet(props) {
             wrap="nowrap"
           >
             <Grid item xs={12}>
-              {tweet.authorName ? <Avatar style={defaultUserIconColors[Math.floor(Math.random() * Math.floor(defaultUserIconColors.length))]}>{tweet.authorName[0]}</Avatar> : <AccountCircle color="primary" fontSize="large" />}
+              {
+                tweet.authorName ?
+                  <Avatar style={userData.color ?
+                    { backgroundColor: userData.color }
+                    : { backgroundColor: 'orange' }}>
+                    {tweet.authorName[0]}
+                  </Avatar>
+                  : <Avatar className={classes.defaultAvatar}>#</Avatar>
+              }
             </Grid>
             <Grid item xs={12}>
               <Typography className={classes.authorName}>{tweet.authorName}</Typography>
@@ -149,9 +134,11 @@ export default function Tweet(props) {
         </Grid>
 
         <Grid item xs={8} >
-          <Typography variant="body1" className={classes.tweet} gutterBottom>
-            {tweet.text}
-          </Typography>
+          <Box p={2}>
+            <Typography variant="body1" className={classes.tweet} gutterBottom>
+              {tweet.text}
+            </Typography>
+          </Box>
         </Grid>
         <Grid xs={2} item>
           {btnContainer()}

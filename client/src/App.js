@@ -1,29 +1,28 @@
 
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
-import { withAuth } from '@okta/okta-react';
-import HomePage from './components/home/HomePage';
-import SignUp from './components/auth/SignUp';
-import config from './app.config';
-import LoginPage from './components/auth/LoginPage';
-import ProfilePage from './components/auth/ProfilePage';
-import GenericProfilePage from './components/home/GenericProfilePage';
-import './App.css';
+import React, { Component } from 'react'
+import { Route, Switch } from 'react-router-dom'
+import { SecureRoute, ImplicitCallback } from '@okta/okta-react'
+import { withAuth } from '@okta/okta-react'
+import HomePage from './components/home/HomePage'
+import SignUp from './components/auth/SignUp'
+import config from './app.config'
+import LoginPage from './components/auth/LoginPage'
+import ProfilePage from './components/auth/ProfilePage'
+import SettingsPage from './components/auth/SettingsPage'
+import GenericProfilePage from './components/home/GenericProfilePage'
+import './App.css'
 import AuthContext from './contexts/AuthContext'
 import ApiContext from './contexts/ApiContext'
-import PrimarySearchAppBar from './components/shared/PrimarySearchAppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import PrimarySearchAppBar from './components/shared/PrimarySearchAppBar'
+import CssBaseline from '@material-ui/core/CssBaseline'
 import api from './api/api'
-import { ThemeProvider } from '@material-ui/core/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
 
 
 const theme = createMuiTheme({
 
 })
-
-
 
 export default withAuth(class App extends Component {
   render() {
@@ -43,6 +42,7 @@ export default withAuth(class App extends Component {
                 <Route path="/implicit/callback" component={ImplicitCallback} />
                 <Route exact path="/signup" component={SignUp} />
                 <SecureRoute path="/profile" component={ProfilePage} />
+                <SecureRoute path="/settings" component={SettingsPage} />
                 <Route path="/profile/:username" render={GenericProfilePage} />
 
               </Switch>
@@ -54,6 +54,6 @@ export default withAuth(class App extends Component {
 
       </AuthContext.Provider>
 
-    );
+    )
   }
 })

@@ -9,25 +9,27 @@ import * as serviceWorker from './serviceWorker';
 import configureStore from "./store";
 import { Provider as ReduxProvider } from "react-redux";
 
+
 function onAuthRequired({ history }) {
-    history.push('/login');
+  history.push('/login');
 }
 
-const reduxStore = configureStore(window.REDUX_INITIAL_DATA);
+const reduxStore = configureStore();
+
 
 ReactDOM.render((
-    <ReduxProvider store={reduxStore}>
-        <Router>
-            <Security
-                issuer={config.issuer}
-                client_id={config.client_id}
-                redirect_uri={config.redirect_uri}
-                onAuthRequired={onAuthRequired}
-            >
-                <App />
-            </Security>
-        </Router>
-    </ReduxProvider>), document.getElementById('root'));
+  <ReduxProvider store={reduxStore}>
+    <Router>
+      <Security
+        issuer={config.issuer}
+        client_id={config.client_id}
+        redirect_uri={config.redirect_uri}
+        onAuthRequired={onAuthRequired}
+      >
+        <App />
+      </Security>
+    </Router>
+  </ReduxProvider>), document.getElementById('root'));
 
 
 // If you want your app to work offline and load faster, you can change

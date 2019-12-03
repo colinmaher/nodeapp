@@ -5,9 +5,8 @@ const UserModel = require('../models/userModel').UserModel
 const TweetModel = require('../models/tweetModel').TweetModel
 const TagModel = require('../models/tagModel').TagModel
 const authRequired = require('../lib/oktaAuthMiddleware')
-console.log(authRequired)
 
-async function getUser(res, id) {
+async function getUserData(res, id) {
   const db = mongoose.connection
   db.on('error', console.error.bind(console, 'connection error:'))
   db.once('open', function () {
@@ -17,22 +16,66 @@ async function getUser(res, id) {
   // pull from mongo for now
   // later make redis cache of feeds and update them as tweets come in
   try {
-    return UserModel.findOne({ oktaId: id })
+    return await UserModel.findOne({ oktaId: id })
   } catch (err) {
-    throw Error(err)
+    console.error(err)
+    throw "Error getting user data"
   }
 }
 
 router.get('/:oktaId', authRequired, async (req, res) => {
   if (!req.params.oktaId) return res.sendStatus(400);
   try {
-    const userData = await getUser(res, req.params.oktaId)
+    const userData = await getUserData(res, req.params.oktaId)
     // console.log(userData)
     res.status(200).send(userData)
   }
-  catch (err) {
-    console.log(err)
-    res.status(400).send("Error fetching user data.")
+  catch (e) {
+    res.status(400).send(e)
+  }
+})
+
+const validateUserData = (prop) => {
+  switch (prop) {
+    case 'firstName':
+      break
+    case 'lastName':
+      break
+    case 'email':
+      break
+    default:
+      throw "Invalid user data"
+  }
+}
+
+async function setUserData(userData, id) {
+  console.log(userData)
+  try {
+    const userDoc = await UserModel.findOne({ oktaId: id })
+    //update tweets also
+    for (const key in userData) {
+      console.log(key)
+      if (userData.hasOwnProperty(key) && validate(key)) {
+        userDoc.key = userData[key]
+      }
+    }
+    userDoc.save()
+    return userDoc
+  }
+  catch (e) {
+    console.error(e)
+    throw "Error setting user data"
+  }
+}
+
+router.post('/:oktaId', authRequired, async (req, res) => {
+  if (!req.params.oktaId || !req.body) return res.sendStatus(400)
+  try {
+    const newUserData = await setUserData(req.body, req.params.oktaId)
+    res.status(200).send(newUserData)
+  }
+  catch (e) {
+    res.status(400).send(e)
   }
 })
 
@@ -50,7 +93,7 @@ async function addTagsToTweet(tweet) {
         doc.save()
         tags.push(doc._id)
       }
-      catch (err) {
+      catch (e) {
         const newTagDoc = await TagModel.create({ tag: tag, tweets: [tweet._id], authorOktaId: tweet.authorOktaId })
         tags.push(newTagDoc._id)
       }
@@ -94,8 +137,9 @@ async function postTweet(tweetObj) {
     doc.save()
     return tweet
   }
-  catch (err) {
-    throw Error(err)
+  catch (e) {
+    console.error(e)
+    throw "Error posting tweet"
   }
 }
 
@@ -110,7 +154,7 @@ async function validateTweet(tweet, oktaId) {
     tweetObj.authorOktaId = oktaId
     return tweetObj
   }
-  else throw Error("Invalid tweet")
+  else throw "Invalid tweet"
 }
 
 router.post('/:oktaId/tweet', authRequired, async (req, res) => {
@@ -120,9 +164,8 @@ router.post('/:oktaId/tweet', authRequired, async (req, res) => {
     const tweet = await postTweet(tweetObj)
     res.status(200).send(tweet)
   }
-  catch (err) {
-    console.log(err)
-    res.send("Error: Tweets can only be 1 to 280 characters in length").status(400)
+  catch (e) {
+    res.send(e).status(400)
   }
 })
 
@@ -131,9 +174,11 @@ async function deleteTweet(oktaId, id) {
     const userDoc = await UserModel.findOne({ oktaId: oktaId })
     userDoc.tweets.pull({ _id: id })
     userDoc.save()
+    await TweetModel.deleteOne({ _id: id })
   }
-  catch (err) {
-    throw Error(err)
+  catch (e) {
+    console.error(e)
+    throw "Error deleting tweet"
   }
 }
 
@@ -144,8 +189,7 @@ router.post('/:oktaId/delete/:tweetId', authRequired, async (req, res) => {
     res.sendStatus(200)
   }
   catch (err) {
-    console.log(err)
-    res.send("Error: Tweets can only be 1 to 280 characters in length").status(400)
+    res.send(err).status(400)
   }
 })
 
@@ -163,7 +207,7 @@ async function editTweet(oktaId, id, newTweet) {
         if (doc.tweets[i]._id == id) {
           doc.tweets[i].text = validatedTweet.text
           // add tags and mentions later here
-          
+
           // console.log(doc.tweets[i])
           doc.save()
           updatedTweet = doc.tweets[i]
@@ -174,7 +218,8 @@ async function editTweet(oktaId, id, newTweet) {
     return updatedTweet
   }
   catch (err) {
-    throw Error(err)
+    console.error(err)
+    throw "Error updating tweet"
   }
 }
 
@@ -182,12 +227,10 @@ router.post('/:oktaId/edit/:tweetId', authRequired, async (req, res) => {
   if (!req.params.oktaId || !req.body || !req.body.tweetText || !req.params.tweetId) return res.sendStatus(400);
   try {
     const tweet = await editTweet(req.params.oktaId, req.params.tweetId, req.body.tweetText)
-    console.log(tweet)
     res.status(200).send(tweet)
   }
   catch (err) {
-    console.log(err)
-    res.send("Error: Tweets can only be 1 to 280 characters in length").status(400)
+    res.send(err).status(400)
   }
 })
 

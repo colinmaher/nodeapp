@@ -91,7 +91,7 @@ export function Feed(props) {
   }, [props.tweets, waitForTweets])
 
   let feedComponent
-  if (!loading) {
+  if (!loading && feed !== null) {
     if (feedSuccess) {
       feedComponent = feed.map((tweet) => <Tweet tweet={tweet}></Tweet>)
     }
