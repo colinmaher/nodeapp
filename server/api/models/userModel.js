@@ -3,7 +3,10 @@ const tweetSchema = require('./tweetModel').TweetSchema;
 // const TweetModel = require('./tweetModel').TweetModel;
 const colorChoices = ["deepOrange", "deepPurple", "indigo", "red", "orange", "green", "blue", "teal"]
 const randomColor = () => {
-  return colorChoices[Math.floor(Math.random() * Math.floor(colorChoices.length))]
+  const rand = Math.floor(Math.random() * colorChoices.length)
+  console.log(rand)
+  return colorChoices[rand]
+
 }
 const userSchema = new mongoose.Schema({
   firstName: String,

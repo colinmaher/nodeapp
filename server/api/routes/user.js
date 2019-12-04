@@ -35,6 +35,7 @@ router.get('/:oktaId', authRequired, async (req, res) => {
   }
 })
 
+//TODO
 const validateUserData = (prop) => {
   switch (prop) {
     case 'firstName':
@@ -132,6 +133,8 @@ async function postTweet(tweetObj) {
     const doc = await UserModel.findOne({ oktaId: tweetObj.authorOktaId })
     tweetObj.createdBy = doc._id
     tweetObj.authorName = doc.firstName + ' ' + doc.lastName
+    console.log(doc)
+    tweetObj.avatarColor = doc.color
     const tweet = await TweetModel.create(tweetObj)
     doc.tweets.push(tweet)
     doc.save()

@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   authorName: {
     whiteSpace: 'nowrap',
+    overflow: 'hidden',
     textOverflow: 'ellipsis'
   },
   defaultAvatar: {
@@ -117,9 +118,9 @@ export default function Tweet(props) {
             <Grid item xs={12}>
               {
                 tweet.authorName ?
-                  <Avatar style={userData.color ?
-                    { backgroundColor: userData.color }
-                    : { backgroundColor: 'orange' }}>
+                  <Avatar style={tweet.avatarColor ?
+                    { backgroundColor: tweet.avatarColor }
+                    : { backgroundColor: 'red' }}>
                     {tweet.authorName[0]}
                   </Avatar>
                   : <Avatar className={classes.defaultAvatar}>#</Avatar>
