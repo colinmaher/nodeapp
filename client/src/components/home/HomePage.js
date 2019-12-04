@@ -32,28 +32,6 @@ export default function HomePage() {
     checkAuthentication()
   })
 
-  async function fetchAndUpdateHistory() {
-    const user = await auth.getUser()
-    if (user != null) {
-      const token = await auth.getAccessToken()
-      const data = await api.getUserData(user.sub, token)
-
-      if (data !== undefined) {
-        // console.log(data)
-        data.tweets = data.tweets.reverse()
-        dispatch(ACTIONS.setUserData(data))
-      }
-    }
-  }
-
-  async function fetchAndUpdateLatest(page, limit) {
-    const data = await api.getLatestTweets(page, limit)
-    if (data !== undefined) {
-      // console.log(data)
-      dispatch(ACTIONS.setLatestTweets(data))
-    }
-  }
-
   const feedIconProps = toggleFeed ? {
     color: 'primary'
   } : {
@@ -80,7 +58,7 @@ export default function HomePage() {
       <IconButton>
         <HistoryIcon {...latestIconProps} fontSize="large" onClick={() => { setToggleFeed(false) }} />
       </IconButton>
-      {toggleFeed ? <HistoryFeed fetchAndUpdate={fetchAndUpdateHistory} /> : <LatestFeed fetchAndUpdate={fetchAndUpdateLatest} />}
+      {toggleFeed ? <HistoryFeed /> : <LatestFeed />}
     </Container>
   )
   else return (<Redirect to={{ pathname: '/login' }} />)

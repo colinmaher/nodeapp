@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import ACTIONS from "../../actions/actions"
-// import fetch from 'isomorphic-fetch'
+import AuthContext from '../../contexts/AuthContext'
+import ApiContext from '../../contexts/ApiContext'
 import Tweet from './Tweet'
 import { Typography } from '@material-ui/core'
-
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import RefreshIcon from '@material-ui/icons/Refresh'
@@ -19,35 +19,66 @@ const useStyles = makeStyles((theme) => ({
 
 export function LatestFeed(props) {
   // const classes = useStyles()
+  const dispatch = useDispatch()
+  const api = useContext(ApiContext)
+  const auth = useContext(AuthContext)
   const tweets = useSelector(state => {
     return state.latestTweets
   });
+
+  async function fetchAndUpdateLatest(page, limit) {
+    const data = await api.getLatestTweets(page, limit)
+    console.log(data)
+    if (data !== undefined) {
+      // console.log(data)
+      dispatch(ACTIONS.setLatestTweets(data))
+    }
+  }
   useEffect(() => {
-    props.fetchAndUpdate(0, null)
+    fetchAndUpdateLatest(0, null)
   }, [])
 
   return (
     <>
       <Typography variant="h6">Latest Tweets</Typography>
-      <Feed tweets={tweets} {...props} />
+      <Feed tweets={tweets} {...props} fetchAndUpdate={fetchAndUpdateLatest} />
     </>
   )
 }
 
 export function HistoryFeed(props) {
   // const classes = useStyles()
+  const api = useContext(ApiContext)
+  const auth = useContext(AuthContext)
+  const dispatch = useDispatch()
   const tweets = useSelector(state => {
     return state.userData.tweets
   });
 
+  async function fetchAndUpdateHistory() {
+    const user = await auth.getUser()
+    if (user != null) {
+      const token = await auth.getAccessToken()
+      const data = await api.getUserData(user.sub, token)
+
+      if (data !== undefined && data.tweets !== undefined) {
+        // console.log(data)
+        data.tweets = data.tweets.reverse()
+        dispatch(ACTIONS.setUserData(data))
+      }
+    }
+  }
+
   useEffect(() => {
-    props.fetchAndUpdate(0, null)
+    fetchAndUpdateHistory(0, null)
   }, [])
+
+
 
   return (
     <>
       <Typography variant="h6">Your Tweets</Typography>
-      <Feed tweets={tweets} {...props} />
+      <Feed tweets={tweets} {...props} fetchAndUpdate={fetchAndUpdateHistory} />
     </>
   )
 }
@@ -111,7 +142,7 @@ export function Feed(props) {
         <RefreshIcon onClick={() => {
           setLoading(true)
           try {
-            props.fetchAndUpdate()
+            props.fetchAndUpdate(page, null)
           } catch (err) {
             setFeedSuccess(false)
           }

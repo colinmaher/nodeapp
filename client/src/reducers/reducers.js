@@ -5,7 +5,7 @@ const defaultState = {
   userData: {
     tweets: [],
   },
-  latestTweets: []
+  latestTweets: [],
 }
 
 const reducer = (state = defaultState, action) => {
@@ -52,6 +52,7 @@ const reducer = (state = defaultState, action) => {
     case ACTIONS.Types.SET_LATEST_TWEETS: {
       const latestTweets = action.payload.latestTweets
       let newState = _.cloneDeep(state)
+      console.log(state)
       newState.latestTweets = state.latestTweets.concat(latestTweets)
       return newState
     }
