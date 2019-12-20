@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     wordWrap: 'break-word',
   },
-  btn: {
-
-  },
   tweetBox: {
     margin: theme.spacing(1),
 

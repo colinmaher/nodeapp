@@ -56,7 +56,7 @@ async function setUserData(userData, id) {
     //update tweets also
     for (const key in userData) {
       console.log(key)
-      if (userData.hasOwnProperty(key) && validate(key)) {
+      if (userData.hasOwnProperty(key) && validateUserData(key)) {
         userDoc.key = userData[key]
       }
     }
