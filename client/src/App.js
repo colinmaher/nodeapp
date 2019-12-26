@@ -41,9 +41,9 @@ export default withAuth(class App extends Component {
                 />
                 <Route path="/implicit/callback" component={ImplicitCallback} />
                 <Route exact path="/signup" component={SignUp} />
-                <SecureRoute path="/profile" component={ProfilePage} />
+                <SecureRoute exact path="/profile" component={ProfilePage} />
                 <SecureRoute path="/settings" component={SettingsPage} />
-                <Route path="/profile/:username" render={GenericProfilePage} />
+                <Route path="/profile/:id" component={GenericProfilePage} />
 
               </Switch>
             </div>

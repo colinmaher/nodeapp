@@ -95,23 +95,10 @@ export default function TweetBox(props) {
     }
   }
 
-  // function TweetField(props) {
-  //   const tweetFieldClasses = useStylesTweetField()
-  //   return (
-  //     <TextField
-
-
-  //       InputProps={{ tweetFieldClasses }}
-  //       {...props}
-  //     />
-  //   )
-
-  // }
-
   const tweetError = tweetSuccess ? <></> : <span>{errorMsg}</span>
   return (
     <Box m={1} >
-        <form autoComplete="off" onSubmit={handleTweetSubmit}>
+      <form autoComplete="off" onSubmit={handleTweetSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={10} >
             <StyledTextField id="outlined-dense-multiline"

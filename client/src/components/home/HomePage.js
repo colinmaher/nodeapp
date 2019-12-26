@@ -13,12 +13,19 @@ import Grid from '@material-ui/core/Grid'
 import HistoryIcon from '@material-ui/icons/History'
 import HomeIcon from '@material-ui/icons/Home'
 import { IconButton } from '@material-ui/core'
-
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles({
+  container: {
+    maxWidth: '700px'
+  }
+})
 export default function HomePage() {
   const api = useContext(ApiContext)
   const dispatch = useDispatch()
+  const classes = useStyles()
   const [authenticated, setAuthenticated] = useState(null)
   const [toggleFeed, setToggleFeed] = useState(true)
+
   const auth = useContext(AuthContext)
 
   async function checkAuthentication() {
@@ -30,6 +37,21 @@ export default function HomePage() {
 
   useEffect(() => {
     checkAuthentication()
+  })
+
+  async function initUserData() {
+    debugger
+    if (authenticated === true) {
+      let user = await auth.getUser()
+      const id = user.sub
+      const token = await auth.getAccessToken()
+      const userData = await api.getUserData(id, token)
+      dispatch(ACTIONS.setUserData(userData))
+    }
+  }
+
+  useEffect(() => {
+    initUserData()
   })
 
   const feedIconProps = toggleFeed ? {
@@ -46,7 +68,7 @@ export default function HomePage() {
 
   if (authenticated === null) return null;
   if (authenticated) return (
-    <Container m={1} maxWidth="sm">
+    <Container m={1} className={classes.container}>
       <Grid container>
         <Grid item xs={12}>
           <TweetBox />
@@ -61,5 +83,19 @@ export default function HomePage() {
       {toggleFeed ? <HistoryFeed /> : <LatestFeed />}
     </Container>
   )
-  else return (<Redirect to={{ pathname: '/login' }} />)
+  else {
+    if (toggleFeed === true) setToggleFeed(false)
+    return (
+      <Container m={1} className={classes.container}>
+        <Grid container>
+          <Grid item xs={12}>
+            <TweetBox />
+          </Grid>
+        </Grid>
+        <LatestFeed />
+      </Container>
+    )
+  }
+
+
 }

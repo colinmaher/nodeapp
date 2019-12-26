@@ -39,6 +39,24 @@ export default {
     }
   },
 
+  fetchTweets: async (id) => {
+    if (id) {
+      try {
+        const tweets = await fetch('/tweets/' + id, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+        })
+        return tweets.json()
+      }
+      catch (err) {
+        throw "Error fetching tweets"
+      }
+    }
+  },
+
   getLatestTweets: async (page, limit) => {
     const payload = {
       page: page,
@@ -73,6 +91,7 @@ export default {
   },
 
   postTweet: async (userId, tweet, token) => {
+    debugger
     if (userId && tweet && token) {
       const payload = {
         tweet: tweet,

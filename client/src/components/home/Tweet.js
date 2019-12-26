@@ -4,6 +4,7 @@ import ACTIONS from "../../actions/actions"
 import TweetBox from './TweetBox'
 import AuthContext from '../../contexts/AuthContext'
 import ApiContext from '../../contexts/ApiContext'
+import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
@@ -76,7 +77,9 @@ export default function Tweet(props) {
   }
 
   const btnContainer = () => {
-    if (tweet.authorOktaId == userData.oktaId) {
+    // console.log(tweet.authorOktaId)
+    // console.log(userData)
+    if (tweet.authorOktaId === userData.oktaId) {
       return (
         <Grid container spacing={1} className={classes.btnContainer}>
           <Grid item >
@@ -89,6 +92,16 @@ export default function Tweet(props) {
       )
     }
     else return null
+  }
+
+  const profileLink = () => {
+    // console.log(tweet)
+    if (tweet.authorOktaId === userData.oktaId) {
+      return <Link to="/profile"><Typography className={classes.authorName}>{tweet.authorName}</Typography></Link>
+    }
+    else {
+      return <Link to={"/profile/" + tweet.authorOktaId}><Typography className={classes.authorName}>{tweet.authorName}</Typography></Link>
+    }
   }
 
   return (
@@ -124,7 +137,7 @@ export default function Tweet(props) {
               }
             </Grid>
             <Grid item xs={12}>
-              <Typography className={classes.authorName}>{tweet.authorName}</Typography>
+              {profileLink()}
             </Grid>
 
           </Grid>

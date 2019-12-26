@@ -21,14 +21,14 @@ export function LatestFeed(props) {
   // const classes = useStyles()
   const dispatch = useDispatch()
   const api = useContext(ApiContext)
-  const auth = useContext(AuthContext)
+  // const auth = useContext(AuthContext)
   const tweets = useSelector(state => {
     return state.latestTweets
   });
 
   async function fetchAndUpdateLatest(page, limit) {
     const data = await api.getLatestTweets(page, limit)
-    console.log(data)
+    // console.log(data)
     if (data !== undefined) {
       // console.log(data)
       dispatch(ACTIONS.setLatestTweets(data))
@@ -39,10 +39,10 @@ export function LatestFeed(props) {
   }, [])
 
   return (
-    <>
+    <div>
       <Typography variant="h6">Latest Tweets</Typography>
       <Feed tweets={tweets} {...props} fetchAndUpdate={fetchAndUpdateLatest} />
-    </>
+    </div>
   )
 }
 
@@ -51,35 +51,39 @@ export function HistoryFeed(props) {
   const api = useContext(ApiContext)
   const auth = useContext(AuthContext)
   const dispatch = useDispatch()
-  const tweets = useSelector(state => {
-    return state.userData.tweets
-  });
+  const [tweets, setTweets] = useState([])
 
   async function fetchAndUpdateHistory() {
-    const user = await auth.getUser()
-    if (user != null) {
-      const token = await auth.getAccessToken()
-      const data = await api.getUserData(user.sub, token)
-
-      if (data !== undefined && data.tweets !== undefined) {
-        // console.log(data)
-        data.tweets = data.tweets.reverse()
-        dispatch(ACTIONS.setUserData(data))
-      }
+    let id
+    if (props.id) {
+      id = props.id
     }
+    else {
+      const user = await auth.getUser()
+      id = user.sub
+    }
+    let data = await api.fetchTweets(id)
+    console.log(data)
+    data = data.reverse()
+
+    if (data !== undefined) {
+
+      setTweets(data)
+    }
+
   }
 
   useEffect(() => {
-    fetchAndUpdateHistory(0, null)
+    fetchAndUpdateHistory()
   }, [])
 
 
 
   return (
-    <>
-      <Typography variant="h6">Your Tweets</Typography>
+    <div>
+      {props.id ? <></> : <Typography variant="h6">Your Tweets</Typography>}
       <Feed tweets={tweets} {...props} fetchAndUpdate={fetchAndUpdateHistory} />
-    </>
+    </div>
   )
 }
 
