@@ -91,7 +91,6 @@ export default {
   },
 
   postTweet: async (userId, tweet, token) => {
-    debugger
     if (userId && tweet && token) {
       const payload = {
         tweet: tweet,

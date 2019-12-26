@@ -40,7 +40,6 @@ export default function HomePage() {
   })
 
   async function initUserData() {
-    debugger
     if (authenticated === true) {
       let user = await auth.getUser()
       const id = user.sub

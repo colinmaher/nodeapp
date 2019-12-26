@@ -154,11 +154,6 @@ export default function Tweet(props) {
         <Grid xs={2} item>
           {btnContainer()}
         </Grid>
-
-
-
-
-
         {deleteError ? "Error deleting tweet." : null}
 
       </Grid>
