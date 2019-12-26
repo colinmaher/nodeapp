@@ -4,8 +4,6 @@ const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-// const fs = require('fs')
-// const passport = require('passport')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const errorHandler = require('errorhandler')
@@ -18,6 +16,8 @@ const helmet = require('helmet')
 const router = express.Router()
 const redis = require("redis")
 const morgan = require('morgan')
+
+const port = process.env.PORT || 80
 
 if (!isProduction) require('dotenv').config() //in dev use .env file otherwise get env variables from heroku
 
@@ -116,6 +116,6 @@ if (isProduction && cluster.isMaster) {
     })
   })
 
-  app.listen(80, () => console.log('Server running on port ' + process.env.PORT))
+  app.listen(port, () => console.log('Server running on port ' + port))
 
 }
