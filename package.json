@@ -22,7 +22,9 @@
     "start:dev": "concurrently --kill-others-on-fail \"npm run start:server\" \"npm run start:client\"",
     "start:server": "npm run start --prefix server",
     "start:client": "npm run start --prefix client",
-    "build": "cd server && npm run build",
+    "build": "run-p build:client build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
     "update": "run-p update:server update:client",
     "update:server": "cd server && npm update",
     "update:client": "cd client && npm update"
