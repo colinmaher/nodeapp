@@ -20,7 +20,7 @@
     "install:client": "cd client && npm install",
     "start": "npm run start:server && npm run start:client",
     "start:dev": "concurrently --kill-others-on-fail \"npm run start:server\" \"npm run start:client\"",
-    "start:server": "npm run start --prefix server",
+    "start:server": "npm run start:prod --prefix server",
     "start:client": "npm run start --prefix client",
     "build": "run-p build:client build:server",
     "build:client": "cd client && npm run build",
