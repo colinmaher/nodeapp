@@ -18,7 +18,7 @@
     "postinstall": "run-p install:server install:client",
     "install:server": "cd server && npm install",
     "install:client": "cd client && npm install",
-    "start": "run-p start:server  start:client",
+    "start": "npm run start:server && npm run start:client",
     "start:dev": "concurrently --kill-others-on-fail \"npm run start:server\" \"npm run start:client\"",
     "start:server": "npm run start --prefix server",
     "start:client": "npm run start --prefix client",
