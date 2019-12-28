@@ -10,6 +10,7 @@ import AuthContext from '../../contexts/AuthContext'
 import ApiContext from '../../contexts/ApiContext'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
 import HistoryIcon from '@material-ui/icons/History'
 import HomeIcon from '@material-ui/icons/Home'
 import { IconButton } from '@material-ui/core'
@@ -51,7 +52,7 @@ export default function HomePage() {
 
   useEffect(() => {
     initUserData()
-  })
+  }, [])
 
   const feedIconProps = toggleFeed ? {
     color: 'primary'
@@ -85,13 +86,10 @@ export default function HomePage() {
   else {
     if (toggleFeed === true) setToggleFeed(false)
     return (
-      <Container m={1} className={classes.container}>
-        <Grid container>
-          <Grid item xs={12}>
-            <TweetBox />
-          </Grid>
-        </Grid>
-        <LatestFeed />
+      <Container m={2} className={classes.container}>
+        <Box m={2}>
+          <LatestFeed />
+        </Box>
       </Container>
     )
   }

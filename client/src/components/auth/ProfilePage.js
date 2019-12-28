@@ -35,7 +35,6 @@ export default function ProfilePage(props) {
     <Container className={classes.container}>
       <Box m={2}>
         <HistoryFeed />
-
       </Box>
     </Container>
 

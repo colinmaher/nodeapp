@@ -31,7 +31,6 @@ export function LatestFeed(props) {
   })
 
   async function fetchAndUpdateLatest() {
-    debugger
     const data = await api.getLatestTweets(page, null)
     console.log(latestTweets)
     console.log(data)

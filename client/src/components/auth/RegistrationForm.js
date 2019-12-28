@@ -82,11 +82,14 @@ class RegistrationForm extends React.Component {
               sessionToken: res.sessionToken
             })
           }
-            
+
 
           )
       })
-      .catch(err => console.log);
+      .catch(err => {
+        console.log(err)
+
+      });
   }
 
   render() {
@@ -95,9 +98,9 @@ class RegistrationForm extends React.Component {
       this.context.redirect({ sessionToken: this.state.sessionToken });
       return null;
     }
-  
+
     const classes = this.props.classes;
-    
+
     return (
       <form className={classes.form} noValidate onSubmit={this.handleSubmit}>
         <Grid container spacing={2}>

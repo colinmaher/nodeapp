@@ -25,7 +25,7 @@ const reducer = (state = defaultState, action) => {
       const data = action.payload
       let newState = _.cloneDeep(state)
       newState.userData.tweets.unshift(data)
-      newState.latestTweets.unshift(data)
+      newState.latestTweets.tweets.unshift(data)
       return newState
     }
     case ACTIONS.Types.DELETE_TWEET: {
@@ -35,7 +35,7 @@ const reducer = (state = defaultState, action) => {
         newState.userData.tweets.filter((tweet) => {
           return tweet._id !== id
         })
-      newState.latestTweets = state.latestTweets.filter((tweet) => {
+      newState.latestTweets.tweets = state.latestTweets.tweets.filter((tweet) => {
         return tweet._id !== id
       })
       return newState
@@ -45,6 +45,13 @@ const reducer = (state = defaultState, action) => {
       let newState = _.cloneDeep(state)
       newState.userData.tweets =
         newState.userData.tweets.map((t) => {
+          if (t._id === tweet._id) {
+            return tweet
+          }
+          return t
+        })
+      newState.latestTweets.tweets =
+        newState.latestTweets.tweets.map((t) => {
           if (t._id === tweet._id) {
             return tweet
           }
