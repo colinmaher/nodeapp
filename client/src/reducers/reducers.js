@@ -53,7 +53,7 @@ const reducer = (state = defaultState, action) => {
       const latestTweets = action.payload.latestTweets
       let newState = _.cloneDeep(state)
       console.log(state)
-      newState.latestTweets = state.latestTweets.concat(latestTweets)
+      newState.latestTweets = latestTweets
       return newState
     }
     default:
