@@ -22,26 +22,32 @@ export function LatestFeed(props) {
   const dispatch = useDispatch()
   const api = useContext(ApiContext)
   // const auth = useContext(AuthContext)
-  const tweets = useSelector(state => {
-    return state.latestTweets
+  const latestTweets = useSelector(state => {
+    return state.latestTweets.tweets
   });
 
-  async function fetchAndUpdateLatest(page, limit) {
-    const data = await api.getLatestTweets(page, limit)
-    // console.log(data)
-    if (data !== undefined) {
-      // console.log(data)
-      dispatch(ACTIONS.setLatestTweets(data))
+  const page = useSelector(state => {
+    return state.latestTweets.page
+  })
+
+  async function fetchAndUpdateLatest() {
+    debugger
+    const data = await api.getLatestTweets(page, null)
+    console.log(latestTweets)
+    console.log(data)
+    if (page !== undefined && data !== undefined) {
+      dispatch(ACTIONS.addLatestTweets(data))
+      dispatch(ACTIONS.pageLatestTweets(page + 1))
     }
   }
   useEffect(() => {
-    fetchAndUpdateLatest(0, null)
+    fetchAndUpdateLatest()
   }, [])
 
   return (
     <div>
       <Typography variant="h6">Latest Tweets</Typography>
-      <Feed tweets={tweets} {...props} fetchAndUpdate={fetchAndUpdateLatest} />
+      <Feed tweets={latestTweets} {...props} fetchAndUpdate={fetchAndUpdateLatest} />
     </div>
   )
 }
@@ -67,7 +73,6 @@ export function HistoryFeed(props) {
     data = data.reverse()
 
     if (data !== undefined) {
-
       setTweets(data)
     }
 
@@ -92,7 +97,6 @@ export function Feed(props) {
   const [loading, setLoading] = useState(false)
   const [feedSuccess, setFeedSuccess] = useState(true)
   const [feed, setFeed] = useState([])
-  const [page, setPage] = useState(1)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,8 +106,7 @@ export function Feed(props) {
       const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
       const windowBottom = windowHeight + window.pageYOffset;
       if (windowBottom >= docHeight) {
-        props.fetchAndUpdate(page, null)
-        setPage(page + 1)
+        props.fetchAndUpdate()
       }
     }
     window.addEventListener("scroll", handleScroll)
@@ -146,7 +149,7 @@ export function Feed(props) {
         <RefreshIcon onClick={() => {
           setLoading(true)
           try {
-            props.fetchAndUpdate(page, null)
+            props.fetchAndUpdate()
           } catch (err) {
             setFeedSuccess(false)
           }

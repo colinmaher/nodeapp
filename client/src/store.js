@@ -14,7 +14,10 @@ export default function configureStore() {
   store.subscribe(() => {
     saveState({
       userData: store.getState().userData,
-      latestTweets: [],
+      latestTweets: {
+        tweets: [],
+        page: 0
+      },
     })
   })
   return store;
