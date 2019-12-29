@@ -3,9 +3,11 @@ import _ from "lodash"
 
 const defaultState = {
   userData: {
-    tweets: [],
+    error: "",
+    data: {},
   },
   latestTweets: {
+    error: "",
     tweets: [],
     page: 0
   },
@@ -15,11 +17,20 @@ const reducer = (state = defaultState, action) => {
   console.log(action)
   // console.log(action.payload)
   switch (action.type) {
-    case ACTIONS.Types.SET_USER_DATA: {
+    case ACTIONS.Types.USER_DATA_SUCCESS: {
       const data = action.payload
       let newState = _.cloneDeep(state)
-      newState.userData = data
+      newState.userData.data = data
       return newState
+    }
+    case ACTIONS.Types.USER_DATA_FAIL: {
+      const error = action.payload
+      let newState = _.cloneDeep(state)
+      newState.userData.error = error
+      return newState
+    }
+    case ACTIONS.Types.USER_DATA_REQUEST: {
+      return state
     }
     case ACTIONS.Types.TWEET: {
       const data = action.payload

@@ -66,7 +66,7 @@ export default function TweetBox(props) {
     if (editing) {
       try {
         const token = await auth.getAccessToken()
-        const tweet = await api.editTweet(userData.oktaId, tweetText, props.id, token)
+        const tweet = await api.editTweet(userData.data.oktaId, tweetText, props.id, token)
         console.log(tweet)
         dispatch(ACTIONS.editTweet(tweet))
         setTweetSuccess(true)
@@ -81,7 +81,7 @@ export default function TweetBox(props) {
     else {
       try {
         const token = await auth.getAccessToken()
-        const tweet = await api.postTweet(userData.oktaId, tweetText, token)
+        const tweet = await api.postTweet(userData.data.oktaId, tweetText, token)
         dispatch(ACTIONS.tweet(tweet))
         setTweetSuccess(true)
         setTweetText('')

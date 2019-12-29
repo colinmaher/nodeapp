@@ -16,9 +16,6 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    maxWidth: '700px',
-  },
 
 }));
 
@@ -32,7 +29,7 @@ export default function ProfilePage(props) {
 
   if (userData === null) return null
   return (
-    <Container className={classes.container}>
+    <Container m={1} maxWidth="md">
       <Box m={2}>
         <HistoryFeed />
       </Box>

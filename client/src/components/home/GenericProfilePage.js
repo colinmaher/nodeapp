@@ -5,20 +5,28 @@ import {
   useParams
 } from "react-router-dom";
 import { HistoryFeed } from "./Feed"
+import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container'
+import Box from '@material-ui/core/Box'
+
+
+const useStyles = makeStyles(theme => ({
+
+}))
 
 function GenericProfilePage(props) {
   const { id } = useParams()
+  const classes = useStyles()
   const userData = useSelector(state => {
     return state.userData
   })
-  console.log(id)
-  console.log(userData.oktaId)
-  if (id !== userData.oktaId) {
+  if (id !== userData.data.oktaId) {
 
     return (
-      <Container m={1} maxWidth="sm">
-        <HistoryFeed id={id} />
+      <Container m={1} maxWidth="md">
+        <Box m={2}>
+          <HistoryFeed id={id} />
+        </Box>
       </Container>
     )
   }

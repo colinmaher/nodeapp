@@ -15,11 +15,12 @@ import HistoryIcon from '@material-ui/icons/History'
 import HomeIcon from '@material-ui/icons/Home'
 import { IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-const useStyles = makeStyles({
-  container: {
-    maxWidth: '700px'
-  }
-})
+import '../../App.css'
+
+const useStyles = makeStyles(theme => ({
+
+}))
+
 export default function HomePage() {
   const api = useContext(ApiContext)
   const dispatch = useDispatch()
@@ -41,18 +42,18 @@ export default function HomePage() {
   })
 
   async function initUserData() {
+    let user = await auth.getUser()
     if (authenticated === true) {
-      let user = await auth.getUser()
       const id = user.sub
       const token = await auth.getAccessToken()
-      const userData = await api.getUserData(id, token)
-      dispatch(ACTIONS.setUserData(userData))
+      // const userData = await api.getUserData(id, token)
+      dispatch(ACTIONS.userDataRequest(id, token))
     }
   }
 
   useEffect(() => {
     initUserData()
-  }, [])
+  })
 
   const feedIconProps = toggleFeed ? {
     color: 'primary'
@@ -68,7 +69,7 @@ export default function HomePage() {
 
   if (authenticated === null) return null;
   if (authenticated) return (
-    <Container m={1} className={classes.container}>
+    <Container m={1} maxWidth="md">
       <Grid container>
         <Grid item xs={12}>
           <TweetBox />
@@ -86,7 +87,7 @@ export default function HomePage() {
   else {
     if (toggleFeed === true) setToggleFeed(false)
     return (
-      <Container m={2} className={classes.container}>
+      <Container m={2} maxWidth="md">
         <Box m={2}>
           <LatestFeed />
         </Box>

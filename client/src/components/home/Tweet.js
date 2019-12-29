@@ -67,7 +67,7 @@ export default function Tweet(props) {
   async function handleDeleteTweet() {
     try {
       const token = await auth.getAccessToken()
-      await api.deleteTweet(userData.oktaId, tweet, token)
+      await api.deleteTweet(userData.data.oktaId, tweet, token)
       dispatch(ACTIONS.deleteTweet(tweet._id))
       setDeleteError(false)
     }
@@ -79,7 +79,7 @@ export default function Tweet(props) {
   const btnContainer = () => {
     // console.log(tweet.authorOktaId)
     // console.log(userData)
-    if (tweet.authorOktaId === userData.oktaId) {
+    if (tweet.authorOktaId === userData.data.oktaId) {
       return (
         <Grid container spacing={1} className={classes.btnContainer}>
           <Grid item >

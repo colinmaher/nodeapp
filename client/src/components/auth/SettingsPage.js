@@ -46,23 +46,24 @@ export default function SettingsPage(props) {
     return state.userData
   })
 
-  const [firstName, setFirstName] = useState(userData.firstName)
-  const [lastName, setLastName] = useState(userData.lastName)
-  const [email, setEmail] = useState(userData.email)
+  const [firstName, setFirstName] = useState(userData.data.firstName)
+  const [lastName, setLastName] = useState(userData.data.lastName)
+  const [email, setEmail] = useState(userData.data.email)
   const [password, setPassword] = useState("")
 
+  //TODO
   async function handleSubmit(e) {
     e.preventDefault()
     const token = await auth.getAccessToken()
-    const id = await userData.oktaId
+    const id = await userData.data.oktaId
     const payload = {
       firstName: firstName,
       lastName: lastName,
       email: email,
     }
-    const newUserData = await api.setUserData(id, token, payload)
+    // const newUserData = await api.setUserData(id, token, payload)
 
-    dispatch(ACTIONS.setUserData(newUserData))
+    // dispatch(ACTIONS.userDataPostRequest(id, token, payload))
   }
 
   function handleFirstNameChange(e) {
