@@ -1,4 +1,20 @@
 export default {
+  createUser: async (payload) => {
+    console.log(payload)
+    try {
+      await fetch('/users', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+    }
+    catch (err) {
+      throw "Cannot create user right now"
+    }
+  },
   setUserData: async (id, token, payload) => {
     if (id && token && payload) {
       try {
@@ -14,7 +30,7 @@ export default {
         return newUserData.json()
       }
       catch (err) {
-        throw "Error updating user data"
+        throw "Cannot update user data right now"
       }
     }
   },
@@ -34,7 +50,7 @@ export default {
         return newUserData.json()
       }
       catch (err) {
-        throw "Error fetching user data"
+        throw "Cannot fetch user data right now"
       }
     }
   },
@@ -52,7 +68,7 @@ export default {
         return tweets.json()
       }
       catch (err) {
-        throw "Error fetching tweets"
+        throw "Cannot fetch tweets right now"
       }
     }
   },

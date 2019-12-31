@@ -21,7 +21,6 @@ function GenericProfilePage(props) {
     return state.userData
   })
   if (id !== userData.data.oktaId) {
-
     return (
       <Container m={1} maxWidth="md">
         <Box m={2}>

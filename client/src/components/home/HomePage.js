@@ -43,6 +43,7 @@ export default function HomePage() {
 
   async function initUserData() {
     let user = await auth.getUser()
+    if (user === undefined) return
     if (authenticated === true) {
       const id = user.sub
       const token = await auth.getAccessToken()

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { connect } from 'react-redux'
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import PropTypes from 'prop-types';
@@ -8,12 +9,13 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
 import OktaAuth from '@okta/okta-auth-js';
+import config from '../../app.config';
 // import { withAuth } from '@okta/okta-react';
 
 import { Link } from "react-router-dom";
 
-import config from '../../app.config';
 import AuthContext from '../../contexts/AuthContext'
+import ACTIONS from '../../actions/actions'
 
 class RegistrationForm extends React.Component {
   static contextType = AuthContext
@@ -24,7 +26,10 @@ class RegistrationForm extends React.Component {
       lastName: '',
       email: '',
       password: '',
-      sessionToken: null
+      error: null,
+      sessionToken: null,
+      signUpError: this.props.signInError,
+      userInputErrors: []
     };
     this.oktaAuth = new OktaAuth({ url: config.url });
     this.checkAuthentication = this.checkAuthentication.bind(this);
@@ -35,15 +40,39 @@ class RegistrationForm extends React.Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
-  async checkAuthentication(auth) {
-    const token = await auth.getIdToken();
+  async checkAuthentication() {
+    const token = await this.context.getIdToken();
     if (token) {
       this.setState({ token });
     }
   }
   componentDidUpdate() {
-    console.log(this.context)
-    this.checkAuthentication(this.context);
+    this.checkAuthentication();
+  }
+
+  validateUserInput() {
+    let nameRegex = /[a-zA-Z]+[^#&<>\"~;$^%{}?+=\\[\]!@,./_`:*()|\d]{1,20}$/
+    let emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    let passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/
+    let errorArray = []
+    return new Promise((resolve) => {
+      if (!nameRegex.test(this.state.firstName)) {
+        errorArray.push("Invalid first name.")
+      }
+      if (!nameRegex.test(this.state.lastName)) {
+        errorArray.push("Invalid last name.")
+      }
+      if (!emailRegex.test(this.state.email)) {
+        errorArray.push("Invalid email.")
+      }
+      if (!passwordRegex.test(this.state.password)) {
+        errorArray.push("Invalid password.")
+      }
+      this.setState({
+        userInputErrors: this.state.userInputErrors.concat(errorArray)
+      }, resolve)
+    })
+
   }
 
   handleFirstNameChange(e) {
@@ -58,43 +87,55 @@ class RegistrationForm extends React.Component {
   handlePasswordChange(e) {
     this.setState({ password: e.target.value });
   }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    fetch('/users', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state)
+  clearErrors() {
+    return new Promise((resolve) => {
+      this.setState({ userInputErrors: [] }, resolve)
     })
-      .then(() => {
-        console.log("okta sign in")
-        this.oktaAuth
-          .signIn({
-            username: this.state.email,
-            password: this.state.password
-          })
-          .then(res => {
-            console.log(res)
-            this.setState({
-              sessionToken: res.sessionToken
-            })
-          }
+  }
 
+  createOktaUser() {
+    return new Promise((resolve) => {
+      this.oktaAuth
+        .signIn({
+          username: this.state.email,
+          password: this.state.password
+        })
+        .then(res => {
+          console.log(res)
+          this.setState({
+            sessionToken: res.sessionToken
+          }, resolve)
+        })
+        .catch(e => {
+          console.log(e)
+          this.props.createUserFail(e.message)
+        });
+    })
+  }
 
-          )
-      })
-      .catch(err => {
-        console.log(err)
-
-      });
+  async handleSubmit(e) {
+    e.preventDefault();
+    await this.clearErrors()
+    await this.validateUserInput()
+    if (this.state.userInputErrors.length > 0) return
+    const payload = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      password: this.state.password,
+    }
+    try {
+      await this.props.createUserRequest(payload)
+      await this.createOktaUser()
+    }
+    catch (e) {
+      this.props.createUserFail(e)
+    }
   }
 
   render() {
     if (this.state.sessionToken) {
-      console.log(this.context)
+      // console.log(this.context)
       this.context.redirect({ sessionToken: this.state.sessionToken });
       return null;
     }
@@ -109,7 +150,6 @@ class RegistrationForm extends React.Component {
               autoComplete="fname"
               name="firstName"
               variant="outlined"
-              required
               fullWidth
               id="firstName"
               label="First Name"
@@ -117,12 +157,12 @@ class RegistrationForm extends React.Component {
               autoFocus
               value={this.state.firstName}
               onChange={this.handleFirstNameChange}
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
-              required
               fullWidth
               id="lastName"
               label="Last Name"
@@ -131,12 +171,12 @@ class RegistrationForm extends React.Component {
               autoComplete="lname"
               value={this.state.lastName}
               onChange={this.handleLastNameChange}
+              required
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               variant="outlined"
-              required
               fullWidth
               id="email"
               label="Email Address"
@@ -145,12 +185,12 @@ class RegistrationForm extends React.Component {
               type="email"
               value={this.state.email}
               onChange={this.handleEmailChange}
+              required
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               variant="outlined"
-              required
               fullWidth
               name="password"
               label="Password"
@@ -159,7 +199,19 @@ class RegistrationForm extends React.Component {
               autoComplete="current-password"
               value={this.state.password}
               onChange={this.handlePasswordChange}
+              required
             />
+          </Grid>
+          <Grid item xs={12}>
+            {this.state.signInError !== null ? <Typography variant="caption" color="error">{this.state.signInError}</Typography> : null}
+            {this.state.userInputErrors.map((error, i) =>
+              <Typography key={i} variant="caption" color="error">{error}<br /></Typography>
+            )}
+            <Typography variant="body2">Passwords must:</Typography>
+            <Typography variant="caption"> - be at least 8 characters<br /></Typography>
+            <Typography variant="caption"> - contain a number<br /></Typography>
+            <Typography variant="caption"> - contain a lowercase letter<br /></Typography>
+            <Typography variant="caption"> - contain an uppercase letter<br /></Typography>
           </Grid>
         </Grid>
         <Button
@@ -187,6 +239,12 @@ class RegistrationForm extends React.Component {
 RegistrationForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };
+const mapStateToProps = (state) => {
+  const signInError = state.signInError
+  return { signInError }
+}
 
-export default RegistrationForm;
+const mapDispatchToProps = { createUserRequest: ACTIONS.createUserRequest, createUserFail: ACTIONS.createUserFail }
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
 

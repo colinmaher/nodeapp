@@ -3,44 +3,55 @@ import _ from "lodash"
 
 const defaultState = {
   userData: {
-    error: "",
+    error: null,
     data: {},
   },
   latestTweets: {
-    error: "",
+    error: null,
     tweets: [],
     page: 0
   },
+  signUpError: null,
 }
 
 const reducer = (state = defaultState, action) => {
-  console.log(action)
   // console.log(action.payload)
   switch (action.type) {
-    case ACTIONS.Types.USER_DATA_SUCCESS: {
+    case ACTIONS.Types.CREATE_USER_REQUEST: {
+      return state
+    }
+    case ACTIONS.Types.CREATE_USER_SUCCESS: {
+      return state
+    }
+    case ACTIONS.Types.CREATE_USER_FAIL: {
+      let newState = _.cloneDeep(state)
+      newState.signInError = action.payload.error
+      return newState
+    }
+    case ACTIONS.Types.FETCH_USER_DATA_SUCCESS: {
       const data = action.payload
       let newState = _.cloneDeep(state)
       newState.userData.data = data
       return newState
     }
-    case ACTIONS.Types.USER_DATA_FAIL: {
+    case ACTIONS.Types.FETCH_USER_DATA_FAIL: {
       const error = action.payload
       let newState = _.cloneDeep(state)
       newState.userData.error = error
       return newState
     }
-    case ACTIONS.Types.USER_DATA_REQUEST: {
+    case ACTIONS.Types.FETCH_USER_DATA_REQUEST: {
       return state
     }
     case ACTIONS.Types.TWEET: {
-      const data = action.payload
+      const data = action.payload.tweet
       let newState = _.cloneDeep(state)
       newState.userData.tweets.unshift(data)
       newState.latestTweets.tweets.unshift(data)
       return newState
     }
     case ACTIONS.Types.DELETE_TWEET: {
-      const id = action.payload
+      const id = action.payload.id
       let newState = _.cloneDeep(state)
       newState.userData.tweets =
         newState.userData.tweets.filter((tweet) => {
