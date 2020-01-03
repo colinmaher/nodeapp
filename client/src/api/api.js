@@ -38,7 +38,7 @@ export default {
   getUserData: async (id, token) => {
     if (id && token) {
       try {
-        const newUserData = await fetch('/user/' + id, {
+        let newUserData = await fetch('/user/' + id, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -127,13 +127,12 @@ export default {
         throw "Error posting tweet"
       }
     }
-
   },
 
-  deleteTweet: async (userId, tweet, token) => {
-    if (userId && tweet && token) {
+  deleteTweet: async (userId, tweetId, token) => {
+    if (userId && tweetId && token) {
       try {
-        await fetch("/user/" + userId + "/delete/" + tweet._id, {
+        await fetch("/user/" + userId + "/delete/" + tweetId, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

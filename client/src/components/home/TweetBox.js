@@ -66,9 +66,9 @@ export default function TweetBox(props) {
     if (editing) {
       try {
         const token = await auth.getAccessToken()
-        const tweet = await api.editTweet(userData.data.oktaId, tweetText, props.id, token)
-        console.log(tweet)
-        dispatch(ACTIONS.editTweet(tweet))
+        // const tweet = await api.editTweet(userData.data.oktaId, tweetText, props.id, token)
+        // console.log(tweet)
+        dispatch(ACTIONS.editTweetRequest(userData.data.oktaId, tweetText, props.id, token))
         setTweetSuccess(true)
         setTweetText('')
         setValidTweet(false)
@@ -81,14 +81,14 @@ export default function TweetBox(props) {
     else {
       try {
         const token = await auth.getAccessToken()
-        const tweet = await api.postTweet(userData.data.oktaId, tweetText, token)
-        dispatch(ACTIONS.tweet(tweet))
+        // const tweet = await api.postTweet(userData.data.oktaId, tweetText, token)
+        dispatch(ACTIONS.postTweetRequest(userData.data.oktaId, tweetText, token))
         setTweetSuccess(true)
         setTweetText('')
         setValidTweet(false)
-
       }
       catch (e) {
+        console.log(e)
         setTweetSuccess(false)
         setErrorMsg('Tweet failed to post. Please try again.\n')
       }

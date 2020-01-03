@@ -58,7 +58,7 @@ export default function Tweet(props) {
   const tweet = props.tweet
   const dispatch = useDispatch()
   const auth = useContext(AuthContext)
-  const api = useContext(ApiContext)
+  // const api = useContext(ApiContext)
   const userData = useSelector(state => {
     return state.userData
   })
@@ -67,8 +67,8 @@ export default function Tweet(props) {
   async function handleDeleteTweet() {
     try {
       const token = await auth.getAccessToken()
-      await api.deleteTweet(userData.data.oktaId, tweet, token)
-      dispatch(ACTIONS.deleteTweet(tweet._id))
+      // await api.deleteTweet(userData.data.oktaId, tweet, token)
+      dispatch(ACTIONS.deleteTweetRequest(userData.data.oktaId, tweet._id, token))
       setDeleteError(false)
     }
     catch (e) {

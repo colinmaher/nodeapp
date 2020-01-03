@@ -32,8 +32,6 @@ export function LatestFeed(props) {
 
   async function fetchAndUpdateLatest() {
     const data = await api.getLatestTweets(page, null)
-    console.log(latestTweets)
-    console.log(data)
     if (page !== undefined && data !== undefined) {
       dispatch(ACTIONS.addLatestTweets(data))
       dispatch(ACTIONS.pageLatestTweets(page + 1))
@@ -53,10 +51,14 @@ export function LatestFeed(props) {
 
 export function HistoryFeed(props) {
   // const classes = useStyles()
-  const api = useContext(ApiContext)
+  // const api = useContext(ApiContext)
   const auth = useContext(AuthContext)
   const dispatch = useDispatch()
-  const [tweets, setTweets] = useState([])
+  // const [tweets, setTweets] = useState([])
+  const userTweets = useSelector(state => {
+    return state.userData.data.tweets
+  });
+
 
   async function fetchAndUpdateHistory() {
     let id
@@ -67,14 +69,8 @@ export function HistoryFeed(props) {
       const user = await auth.getUser()
       id = user.sub
     }
-    let data = await api.fetchTweets(id)
-    console.log(data)
-    data = data.reverse()
 
-    if (data !== undefined) {
-      setTweets(data)
-    }
-
+    dispatch(ACTIONS.fetchTweetsRequest(id))
   }
 
   useEffect(() => {
@@ -86,7 +82,7 @@ export function HistoryFeed(props) {
   return (
     <div>
       {props.id ? <></> : <Typography variant="h6">Your Tweets</Typography>}
-      <Feed tweets={tweets} {...props} fetchAndUpdate={fetchAndUpdateHistory} />
+      <Feed tweets={userTweets} {...props} fetchAndUpdate={fetchAndUpdateHistory} />
     </div>
   )
 }
