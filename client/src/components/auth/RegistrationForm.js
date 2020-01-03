@@ -94,23 +94,21 @@ class RegistrationForm extends React.Component {
   }
 
   createOktaUser() {
-    return new Promise((resolve) => {
-      this.oktaAuth
-        .signIn({
-          username: this.state.email,
-          password: this.state.password
+    this.oktaAuth
+      .signIn({
+        username: this.state.email,
+        password: this.state.password
+      })
+      .then(res => {
+        console.log(res)
+        this.setState({
+          sessionToken: res.sessionToken
         })
-        .then(res => {
-          console.log(res)
-          this.setState({
-            sessionToken: res.sessionToken
-          }, resolve)
-        })
-        .catch(e => {
-          console.log(e)
-          this.props.createUserFail(e.message)
-        });
-    })
+      })
+      .catch(e => {
+        console.log(e)
+        this.props.createUserFail(e.message)
+      });
   }
 
   async handleSubmit(e) {
@@ -125,11 +123,17 @@ class RegistrationForm extends React.Component {
       password: this.state.password,
     }
     try {
-      await this.props.createUserRequest(payload)
-      await this.createOktaUser()
+      this.props.createUserRequest(payload)
     }
     catch (e) {
       this.props.createUserFail(e)
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.createUserSuccess === true) {
+      debugger
+      this.createOktaUser()
     }
   }
 
@@ -241,7 +245,8 @@ RegistrationForm.propTypes = {
 };
 const mapStateToProps = (state) => {
   const signInError = state.signInError
-  return { signInError }
+  const createUserSuccess = state.createUserSuccess
+  return { signInError, createUserSuccess }
 }
 
 const mapDispatchToProps = { createUserRequest: ACTIONS.createUserRequest, createUserFail: ACTIONS.createUserFail }

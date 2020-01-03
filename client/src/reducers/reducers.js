@@ -21,6 +21,7 @@ const defaultState = {
   editTweetError: null,
   signUpError: null,
   fetchTweetsError: null,
+  createUserSuccess: null,
 }
 
 const reducer = (state = defaultState, action) => {
@@ -31,12 +32,15 @@ const reducer = (state = defaultState, action) => {
     }
 
     case ACTIONS.Types.CREATE_USER_SUCCESS: {
-      return state
+      const newState = _.cloneDeep(state)
+      newState.createUserSuccess = true
+      return newState
     }
 
     case ACTIONS.Types.CREATE_USER_FAIL: {
       let newState = _.cloneDeep(state)
       newState.signInError = action.payload.error
+      newState.createUserSuccess = false
       return newState
     }
 

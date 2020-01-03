@@ -24,7 +24,7 @@ const Types = {
 };
 // actions
 
-const createUserRequest = (payload) => ({
+const createUserRequest = (payload, cb) => ({
   type: Types.CREATE_USER_REQUEST,
   payload: { ...payload },
 })
