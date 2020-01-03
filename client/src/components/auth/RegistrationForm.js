@@ -28,7 +28,7 @@ class RegistrationForm extends React.Component {
       password: '',
       error: null,
       sessionToken: null,
-      signUpError: this.props.signInError,
+      signUpError: this.props.signUpError,
       userInputErrors: []
     };
     this.oktaAuth = new OktaAuth({ url: config.url });
@@ -132,7 +132,6 @@ class RegistrationForm extends React.Component {
 
   componentDidUpdate() {
     if (this.props.createUserSuccess === true) {
-      debugger
       this.createOktaUser()
     }
   }
@@ -207,7 +206,7 @@ class RegistrationForm extends React.Component {
             />
           </Grid>
           <Grid item xs={12}>
-            {this.state.signInError !== null ? <Typography variant="caption" color="error">{this.state.signInError}</Typography> : null}
+            {this.state.signUpError !== null ? <Typography variant="caption" color="error">{this.state.signInError}</Typography> : null}
             {this.state.userInputErrors.map((error, i) =>
               <Typography key={i} variant="caption" color="error">{error}<br /></Typography>
             )}
