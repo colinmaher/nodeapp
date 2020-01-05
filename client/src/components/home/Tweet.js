@@ -96,7 +96,7 @@ export default function Tweet(props) {
 
   const profileLink = () => {
     // console.log(tweet)
-    if (tweet.authorOktaId === userData.oktaId) {
+    if (tweet.authorOktaId === userData.data.oktaId) {
       return <Link to="/profile"><Typography className={classes.authorName}>{tweet.authorName}</Typography></Link>
     }
     else {

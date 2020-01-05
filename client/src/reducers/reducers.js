@@ -75,6 +75,10 @@ const reducer = (state = defaultState, action) => {
       if (newState.userData.data.oktaId === id) {
         newState.userData.data.tweets = tweets
       }
+      else {
+        !(id in newState.otherTweets) && (newState.otherTweets[id] = [])
+        newState.otherTweets[id] = tweets
+      }
       return newState
     }
 

@@ -18,7 +18,8 @@ export default function configureStore() {
   store.subscribe(() => {
     saveState({
       userData: store.getState().userData,
-      latestTweets: store.getState().latestTweets
+      latestTweets: store.getState().latestTweets,
+      otherTweets: store.getState().otherTweets
     })
   })
   return store;

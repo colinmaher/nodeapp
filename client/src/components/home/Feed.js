@@ -56,7 +56,18 @@ export function HistoryFeed(props) {
   const dispatch = useDispatch()
   // const [tweets, setTweets] = useState([])
   const userTweets = useSelector(state => {
-    return state.userData.data.tweets
+    if (props.id !== undefined) {
+      console.log(state)
+      if (state.otherTweets === undefined) {
+        return []
+      }
+      else {
+        return state.otherTweets[props.id]
+      }
+    }
+    else {
+      return state.userData.data.tweets
+    }
   });
 
 
